@@ -33,7 +33,7 @@ bite on. One or two lines each:
 - **L**ongging/Job — the job-to-be-done they'd hire this for.
 - **E**xisting solution — what they do today (including "spreadsheet / nothing").
 - **A**lternative cost — what the pain costs them now (time/money/risk).
-- **R**eachability — can you actually reach 20–200 of them cheaply?
+- **R**eachability — can you actually reach 20–50 of them cheaply for validation?
 - **F**requency — how often the pain recurs (drives retention).
 - **R**evenue — plausible price × plausible volume.
 - **A**dvantage — why you (unfair advantage, or honestly: none).

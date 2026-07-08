@@ -1,17 +1,18 @@
 # Hermes — Idea-to-Outreach Workflow
 
-A gated pipeline that takes a raw product idea and, only if it survives, turns it
-into a small, compliant cold-outreach campaign with closed-loop diagnostics.
+A gated pipeline that takes a raw product idea and, only if it survives desk
+devalidation, turns it into a small **validation send** with closed-loop
+diagnostics.
 
-- **Stages 0–3** are Markdown **skills** run by an agent (Claude Code / Cursor /
-  Codex). They devalidate the idea, smoke-test demand, and produce outreach
-  assets.
-- **Stage 4** is **n8n → Mailgun → Postgres** (in `n8n/`). It enrolls leads,
-  writes and sends a 3-step drip, ingests events, stops on reply, and reports.
+- **Stages 0–2** are Markdown **skills** run by an agent (Claude Code / Cursor /
+  Codex). They devalidate the idea and produce outreach assets for validation.
+- **Stage 3** is **n8n → Mailgun → Postgres** (in `n8n/`). It enrolls up to 30
+  leads, sends a 1–2 touch validation sequence, ingests events, stops on reply,
+  and reports PASS/FAIL.
 
-The design decisions behind every choice live in
-[`IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md). Agent behaviour is routed by
-[`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md).
+Pipeline v2: [`IMPLEMENTATION-PLAN-v2.md`](IMPLEMENTATION-PLAN-v2.md). Infra and
+legal: [`IMPLEMENTATION-PLAN.md`](IMPLEMENTATION-PLAN.md). Agent behaviour is
+routed by [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md).
 
 ## Quick start (agent side)
 
@@ -21,8 +22,8 @@ cp -r ideas/_TEMPLATE ideas/my-idea-slug
 #   "Run the devalidation workflow on my-idea-slug"
 ```
 
-The agent follows `workflows/1-devalidation.md` → `2` → `3`, pausing at each
-human gate. Say **`GREENLIGHT NEXT STAGE`** to advance.
+The agent follows `workflows/1-devalidation.md` → `2-outreach-prep.md`, pausing
+at each human gate. Say **`GREENLIGHT NEXT STAGE`** to advance.
 
 ## Quick start (execution side)
 
@@ -32,19 +33,20 @@ cp .env.example .env      # fill in Mailgun keys, DB password, signing key
 docker compose up -d      # n8n + Postgres 16; schema auto-applied from sql/
 ```
 
-Then import the workflow JSONs from `n8n/workflows/` into n8n and complete the
-Mailgun + DNS setup in [`n8n/README.md`](n8n/README.md).
+Import workflow JSONs, paste the Offer/CTA/Voice block from `04-outreach-plan.md`
+into the 4b-sender config node, upload `leads.csv` via Workflow 0 (config is
+auto-created — **no SQL**). See [`n8n/README.md`](n8n/README.md).
 
-## Pipeline at a glance
+## Pipeline at a glance (v2)
 
 ```
-00 idea → 01 devalidation ─(gate)→ 02 landing test ─(gate)→ 03 ICP+positioning
-      → 04 outreach plan + leads.csv ─(GREENLIGHT)→ n8n campaign → 05 diagnostics
+00 idea → 01 devalidation ─(≥4/10 + PASS + GREENLIGHT)→ 03 ICP + positioning
+      → 04 outreach plan + leads.csv ─(GREENLIGHT)→ n8n validation send → 05 diagnostics
 ```
 
-KPI target: **30 discovery calls / ≥ 1 preorder** per idea that reaches Stage 4.
+Validation target: **≥ 1 positive reply OR ≥ 3 human clicks** after ≤ 30 sends.
 
-## ⚠️ Before the first real send
+## Before the first real send
 
 Cold e-mail to German/EU recipients without prior consent is restricted under
 **UWG §7(2)** and the **GDPR**. Read [`IMPLEMENTATION-PLAN.md` §7](IMPLEMENTATION-PLAN.md)
@@ -54,3 +56,4 @@ not bulk mail — and is not legal advice.
 ## Repository layout
 
 See [`IMPLEMENTATION-PLAN.md` §2](IMPLEMENTATION-PLAN.md) for the annotated tree.
+Landing-page artifacts (`02`) and skills are archived under `_deprecated/`.

@@ -1,7 +1,7 @@
 ---
 name: gtm-mode-selector
 description: >-
-  Stage 3 GTM mode selection. Given the devalidation report and the ICP &
+  Stage 2 GTM mode selection. Given the devalidation report and the ICP &
   positioning document, choose the single go-to-market motion (founder-led cold
   outbound, community-led, content/SEO, paid ads, partnerships) that best fits
   the ICP's awareness level and the wedge. Since this pipeline drives a cold-
@@ -9,7 +9,7 @@ description: >-
   primary motion and say why the chosen motion beats the alternatives. Use when
   the user wants to pick a GTM motion, select a go-to-market strategy, or decide
   how to reach the ICP.
-stage: 3
+stage: 2
 reads: ideas/<slug>/01-devalidation-report.md, ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/03-icp-and-positioning.md  (the "GTM mode" section only)
 ---

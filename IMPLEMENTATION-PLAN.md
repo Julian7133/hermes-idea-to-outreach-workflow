@@ -2,6 +2,11 @@
 
 Stand: 2026-07-07. Greenfield-Projekt, Workspace ist leer.
 
+> **Pipeline v2 (2026-07-08):** Stage 2 landing-page test removed; validation
+> send replaces scale campaign. See [`IMPLEMENTATION-PLAN-v2.md`](IMPLEMENTATION-PLAN-v2.md)
+> for current pipeline behaviour. This document remains authoritative for infra,
+> n8n, Mailgun, Postgres schema, and legal (§7).
+
 ## 0. Grundsatzentscheidungen (aus der Klärungsrunde)
 
 | Entscheidung | Ergebnis |
@@ -66,8 +71,8 @@ hermes-idea-to-outreach-workflow/
 ├── workflows/                    # Markdown-Orchestrierungen (Stage-Abfolge + Gates)
 │   ├── 1-devalidation.md
 │   ├── 2-landing-page-test.md
-│   ├── 3-outreach-prep.md
-│   └── 4-campaign-execution.md
+│   ├── 2-outreach-prep.md
+│   └── 3-validation-send.md
 ├── ideas/<idea-slug>/            # gestaffelte Artefakte pro Idee (siehe Abschnitt 3)
 ├── memory/                       # user_profile.md, market_insights/ (wie Referenz-Repo)
 └── n8n/

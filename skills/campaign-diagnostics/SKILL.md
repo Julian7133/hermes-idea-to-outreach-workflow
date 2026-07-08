@@ -1,12 +1,13 @@
 ---
 name: campaign-diagnostics
 description: >-
-  Stage 4 diagnostics. Given a running campaign, query Postgres (hermes_outreach
-  schema) to produce a funnel, opens-without-click analysis, bot-filtered
-  diagnosis, and a recommendation. Use when the user wants campaign diagnostics,
-  a funnel report, or to diagnose why opens/clicks/replies are low.
-stage: 4
-reads: n8n/sql/outbound.sql, IMPLEMENTATION-PLAN.md (for bot-filtering heuristics and diagnosis table)
+  Stage 3 validation diagnostics. Given a running validation campaign, query
+  Postgres (hermes_outreach schema) to produce a funnel, opens-without-click
+  analysis, bot-filtered diagnosis, and a validation PASS/FAIL verdict against
+  reply/click thresholds. Use when the user wants campaign diagnostics or to
+  decide if an idea survived behavioural validation.
+stage: 3
+reads: n8n/sql/outbound.sql, IMPLEMENTATION-PLAN-v2.md (validation gate rules)
 writes: ideas/<slug>/05-campaign-diagnostics.md
 ---
 
@@ -19,9 +20,10 @@ label it `ASSUMPTION:` and keep it to a defensible order of magnitude.
 
 ## Input
 
-Read `n8n/sql/outbound.sql` for the schema (table/column names) and
-`IMPLEMENTATION-PLAN.md` §6 for the bot-filtering heuristics and diagnosis
-decision table. If the Postgres database is unreachable or the
+Read `n8n/sql/outbound.sql` for the schema (table/column names),
+`IMPLEMENTATION-PLAN.md` §6 for bot-filtering heuristics and diagnosis
+decision table, and `IMPLEMENTATION-PLAN-v2.md` §3 for validation PASS/FAIL
+rules. If the Postgres database is unreachable or the
 `hermes_outreach` schema has no data for the campaign slug, stop and ask the
 user to confirm the campaign name or check the database connection.
 
@@ -172,7 +174,41 @@ Evaluate the rates in this priority order. The first match wins:
 If none of the patterns match, the campaign is healthy — note that and recommend
 continuing to gather data.
 
-### Step 6 — Write the output
+### Step 6 — Validation verdict (v2)
+
+Apply [`IMPLEMENTATION-PLAN-v2.md`](../IMPLEMENTATION-PLAN-v2.md) §3 gate rules:
+
+| Signal | Threshold |
+|---|---|
+| Positive replies | ≥ 1 (hard pass — can trigger **early**) |
+| Human clicks | ≥ 3 (soft pass — can trigger **early**) |
+| Sequence | 3 weekly touches per lead; Reply-Stop on reply |
+
+**Verdict logic:**
+
+- **PASS** if `replied ≥ 1` OR `clicked ≥ 3` — **even mid-sequence** (early pass).
+  If 0 replies but ≥3 clicks, note "proceed with caution."
+- **FAIL** only when the **full 3-touch sequence is complete for all enrolled
+  leads** (no lead still `in_sequence`) AND `replied = 0` AND `clicked < 3`.
+  Recommend `status: validation-failed` in `00-idea-capture.md`.
+- **INCOMPLETE** if any enrolled lead is still `in_sequence` and thresholds
+  not yet met.
+- **Stop** if complaint rate > 0.1%.
+
+Check sequence completion:
+
+```sql
+SELECT
+  count(*) AS enrolled,
+  count(*) FILTER (WHERE status = 'in_sequence') AS still_in_sequence
+FROM outreach_state
+WHERE campaign = '<campaign-slug>';
+```
+
+`still_in_sequence = 0` and `enrolled > 0` means full sequence done (or all
+terminal via reply/bounce).
+
+### Step 7 — Write the output
 
 Write into `ideas/<slug>/05-campaign-diagnostics.md`, filling every section of
 the template:
@@ -194,13 +230,21 @@ the template:
 ## Recommendation
 <Iterate Subject | Iterate Copy | Pivot Offer | Stop (complaint-rate > 0.1%)>
 
-## KPI (manually maintained)
+## Validation verdict (v2)
+- **Verdict:** <PASS | FAIL | INCOMPLETE>
+- **Positive replies:** <n> (need ≥1 for hard pass)
+- **Human clicks:** <n> (need ≥3 for soft pass)
+- **Sends completed:** <n> (enrolled: <n>, still in sequence: <n>)
+- **Notes:** <e.g. "0 replies but 4 clicks — proceed with caution">
+
+## KPI (legacy — not used in v2 validation)
 - **Discovery calls:** <n> / 30
 - **Preorders:** <n> / ≥1
 ```
 
 Leave the KPI section values at `0` if they have not been manually updated. Do
-not fabricate them.
+not fabricate them. On **FAIL**, remind the user to set `status: validation-failed`
+in `00-idea-capture.md`.
 
 ## Output
 

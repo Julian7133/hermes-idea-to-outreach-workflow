@@ -1,9 +1,8 @@
 ---
-description: Stage 3 outreach-asset production. Follow skills/outreach-assets/SKILL.md.
+description: Stage 2 outreach-asset production. Follow skills/outreach-assets/SKILL.md.
 globs:
-  - "ideas/**/03-icp-and-positioning.md"
   - "ideas/**/04-outreach-plan.md"
 alwaysApply: false
 ---
 
-Follow `skills/outreach-assets/SKILL.md` exactly. Stage 3 outreach-asset production. Given the positioning artifact (03-icp-and-positioning.md), produce a 1-Page Marketing Plan (1PMP), exactly three drip angles for a Day 0 / Day 3 / Day 5 Reply-Stop sequence, and an Offer / CTA / Voice CONFIG BLOCK as strict JSON that is copied verbatim into the n8n 4b-sender config node. Use when the user wants to build the outreach plan, draft drip angles, or produce the campaign config for Stage 4 import. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).
+Follow `skills/outreach-assets/SKILL.md` exactly. Stage 2 outreach-asset production. Given 03-icp-and-positioning.md, produce a 1PMP, a 3-step founder-validation drip (weekly, Reply-Stop), and an Offer/CTA/Voice JSON config block for n8n 4b-sender. Copy sounds like sales outreach but includes the honest validation disclaimer on Touch 0 (Liege ich daneben? pattern). Never advance a human gate without GREENLIGHT NEXT STAGE.

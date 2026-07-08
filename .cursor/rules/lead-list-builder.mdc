@@ -1,10 +1,9 @@
 ---
-description: Stage 3 lead-list building. Follow skills/lead-list-builder/SKILL.md.
+description: Stage 2 lead-list building. Follow skills/lead-list-builder/SKILL.md.
 globs:
-  - "ideas/**/03-icp-and-positioning.md"
   - "ideas/**/04-outreach-plan.md"
   - "ideas/**/leads.csv"
 alwaysApply: false
 ---
 
-Follow `skills/lead-list-builder/SKILL.md` exactly. Stage 3 lead-list building. Given an ICP and positioning document (03-icp-and-positioning.md), define a hand-picked lead-sourcing strategy for 20–200 contacts that match the ICP, specify WHERE and HOW to find them on IndieHackers, LinkedIn, and job boards, produce a `leads.csv` matching the `n8n/sql/outbound.sql` schema exactly, and write the "Lead sourcing" section into `04-outreach-plan.md`. Use when the user wants a lead list, lead sourcing, or a hand-curated CSV for outbound outreach. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).
+Follow `skills/lead-list-builder/SKILL.md` exactly. Stage 2 lead-list building. Given an ICP and positioning document (03-icp-and-positioning.md), define a hand-picked lead-sourcing strategy for 20–50 contacts that match the ICP, specify WHERE and HOW to find them on IndieHackers, LinkedIn, and job boards, produce a `leads.csv` matching the `n8n/sql/outbound.sql` schema exactly, and write the "Lead sourcing" section into `04-outreach-plan.md`. Use when the user wants a lead list, lead sourcing, or a hand-curated CSV for validation outreach. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

@@ -34,6 +34,36 @@
       }
     },
     {
+      "id": "a1b2c3d4-e5f6-4789-a012-345678901002b",
+      "name": "Extract Unique Campaigns",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [130, -120],
+      "parameters": {
+        "jsCode": "const leads = $('Parse and Normalize CSV').all().map(i => i.json);\nconst campaigns = [...new Set(leads.map(l => l.campaign).filter(Boolean))];\nreturn campaigns.map(c => ({ json: { campaign: c } }));"
+      }
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4789-a012-345678901002c",
+      "name": "Ensure Campaign Config",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [390, -120],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO outreach_config (campaign, max_new_per_day, daily_send_cap)\nVALUES ($1, 30, 10)\nON CONFLICT (campaign) DO NOTHING\nRETURNING campaign;",
+        "options": {
+          "queryReplacement": "={{ $json.campaign }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
       "id": "a1b2c3d4-e5f6-4789-a012-345678901003",
       "name": "Get Suppression Emails",
       "type": "n8n-nodes-base.postgres",
@@ -107,7 +137,23 @@
       "main": [
         [
           {
+            "node": "Extract Unique Campaigns",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Get Suppression Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Unique Campaigns": {
+      "main": [
+        [
+          {
+            "node": "Ensure Campaign Config",
             "type": "main",
             "index": 0
           }

@@ -1,9 +1,9 @@
 ---
-description: Stage 3 competitive wedge analysis. Follow skills/competitive-wedge/SKILL.md.
+description: Stage 2 competitive wedge analysis. Follow skills/competitive-wedge/SKILL.md.
 globs:
   - "ideas/**/01-devalidation-report.md"
   - "ideas/**/03-icp-and-positioning.md"
 alwaysApply: false
 ---
 
-Follow `skills/competitive-wedge/SKILL.md` exactly. Stage 3 competitive wedge analysis. Given a validated idea and the ICP & positioning document, name the real alternatives the ICP uses today and identify the single angle where this product wins. Use when the user wants to find the competitive wedge, map competitors, or define why the ICP should switch. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).
+Follow `skills/competitive-wedge/SKILL.md` exactly. Stage 2 competitive wedge analysis. Given a validated idea and the ICP & positioning document, name the real alternatives the ICP uses today and identify the single angle where this product wins. Use when the user wants to find the competitive wedge, map competitors, or define why the ICP should switch. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

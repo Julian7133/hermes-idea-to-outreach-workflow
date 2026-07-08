@@ -1,12 +1,12 @@
 ---
 name: competitive-wedge
 description: >-
-  Stage 3 competitive wedge analysis. Given a validated idea and the ICP &
+  Stage 2 competitive wedge analysis. Given a validated idea and the ICP &
   positioning document, name the real alternatives the ICP uses today and
   identify the single angle where this product wins. Use when the user wants to
   find the competitive wedge, map competitors, or define why the ICP should
   switch.
-stage: 3
+stage: 2
 reads: ideas/<slug>/01-devalidation-report.md, ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/03-icp-and-positioning.md  (the "Competitive wedge" section only)
 ---

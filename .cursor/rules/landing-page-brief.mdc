@@ -1,9 +1,10 @@
 ---
-description: Stage 2 smoke-test brief. Follow skills/landing-page-brief/SKILL.md.
+description: DEPRECATED (v2). Landing-page brief removed from pipeline.
 globs:
-  - "ideas/**/01-devalidation-report.md"
-  - "ideas/**/02-landing-page-test.md"
+  - "skills/_deprecated/landing-page-brief/**"
 alwaysApply: false
 ---
 
-Follow `skills/landing-page-brief/SKILL.md` exactly. Stage 2 smoke-test brief. Given the validated promise from 01-devalidation-report.md, produce a runnable landing-page brief: Carrd copy, a Google Ads funnel plan with a 50 USD test budget, a measurement plan with cost-per-email < 8 USD target, and a legal footer checklist. Use when the user wants to design the smoke-test landing page, build a Carrd brief, or plan a cheap validation ad campaign. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).
+**DEPRECATED.** Do not use in v2. Landing-page smoke test removed; behavioural
+validation send replaces it. See `IMPLEMENTATION-PLAN-v2.md`. Skill archived at
+`skills/_deprecated/landing-page-brief/SKILL.md`.
