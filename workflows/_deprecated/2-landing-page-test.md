@@ -1,4 +1,8 @@
-# Workflow 2 — Landing-Page Smoke Test (Stage 2)
+> **DEPRECATED (v2).** Landing-page smoke test removed from pipeline.
+> See [`IMPLEMENTATION-PLAN-v2.md`](../../IMPLEMENTATION-PLAN-v2.md).
+> Kept for reference only — do not run in v2.
+
+# Workflow 2 — Landing-Page Smoke Test (Stage 2, v1 only)
 
 **Goal:** buy the cheapest possible evidence that strangers will give an e-mail
 address for this promise. This stage produces a brief to *run*, then records the
@@ -27,7 +31,7 @@ real result.
 
 ## Gate review
 
-- **Cost per e-mail < 8 USD** → PASS. Proceed to `workflows/3-outreach-prep.md`.
+- **Cost per e-mail < 8 USD** → PASS. (v1 only — deprecated.)
 - **≥ 8 USD** → FAIL. Either pivot the promise/ICP and re-test, or drop the idea.
 
 This gate is a number, not a phrase — but still record the reviewer's decision

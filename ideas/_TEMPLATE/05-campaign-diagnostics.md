@@ -19,6 +19,13 @@
 ## Recommendation
 <Iterate Subject | Iterate Copy | Pivot Offer | Stop (complaint-rate > 0.1%)>
 
-## KPI (manually maintained)
+## Validation verdict (v2)
+- **Verdict:** <PASS | FAIL | INCOMPLETE>
+- **Positive replies:** <n> (need ≥1 for hard pass)
+- **Human clicks:** <n> (need ≥3 for soft pass)
+- **Sends completed:** <n> (enrolled: <n>, still in sequence: <n>)
+- **Notes:** <e.g. "0 replies but 4 clicks — proceed with caution">
+
+## KPI (legacy — not used in v2 validation)
 - **Discovery calls:** <n> / 30
 - **Preorders:** <n> / ≥1

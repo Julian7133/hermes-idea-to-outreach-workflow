@@ -1,12 +1,12 @@
 ---
 name: competitive-wedge
 description: >-
-  Stage 3 competitive wedge analysis. Given a validated idea and the ICP &
+  Stage 2 competitive wedge analysis. Given a validated idea and the ICP &
   positioning document, name the real alternatives the ICP uses today and
   identify the single angle where this product wins. Use when the user wants to
   find the competitive wedge, map competitors, or define why the ICP should
   switch.
-stage: 3
+stage: 2
 reads: ideas/<slug>/01-devalidation-report.md, ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/03-icp-and-positioning.md  (the "Competitive wedge" section only)
 ---
@@ -31,12 +31,17 @@ stop and ask the user to produce it first.
 
 ## Process
 
-### Step 1 — Name the real alternatives
+### Step 1 — Name the real alternatives (live research MANDATORY)
 
 List every real thing the ICP uses today to handle the job the product solves.
-This includes:
+**Research live, do not recall:** search the web for current competitors, then
+fetch each named competitor's homepage and pricing page to capture their actual
+headline value prop, positioning axis, and published pricing. Cite the URLs.
+Internal model knowledge is stale — a wedge built against last year's
+competitor messaging is mis-aimed. This includes:
 
-- Direct competitors (named products, paid or free).
+- Direct competitors (named products, paid or free) — verified live, with
+  current pricing and homepage promise.
 - The "nothing" alternative (doing nothing, accepting the pain).
 - The "spreadsheet / manual process" alternative (the most common real-world
   incumbent).
@@ -79,7 +84,7 @@ wedge** section of that template:
 
 ```markdown
 ## Competitive wedge (competitive-wedge)
-- **Status quo / alternatives:** <named>
+- **Status quo / alternatives:** <named, with source links to homepage/pricing>
 - **The one wedge we win on:** <...>
 ```
 

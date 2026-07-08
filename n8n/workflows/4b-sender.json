@@ -26,7 +26,7 @@
       "position": [260, 0],
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"offer\": \"PASTE from 04-outreach-plan.md — one-line offer\",\n  \"cta\": \"PASTE CTA from 04-outreach-plan.md\",\n  \"voice\": \"PASTE voice/tone from 04-outreach-plan.md\",\n  \"constraints\": \"No invented facts. ≤120 words. One CTA. 1:1 tone.\",\n  \"sender_name\": \"Julian Berlow\",\n  \"sender_signature\": \"Julian Berlow — berlow.de\",\n  \"impressum_line\": \"Impressum: https://berlow.de/impressum | Datenschutz: https://berlow.de/datenschutz\",\n  \"angles\": {\n    \"0\": \"PASTE Day 0 drip angle from 04-outreach-plan.md\",\n    \"1\": \"PASTE Day 3 drip angle from 04-outreach-plan.md\",\n    \"2\": \"PASTE Day 5 drip angle from 04-outreach-plan.md\"\n  }\n}",
+        "jsonOutput": "={\n  \"offer\": \"PASTE from 04-outreach-plan.md — validation ask (expertise call, not a sale)\",\n  \"cta\": \"PASTE CTA from 04-outreach-plan.md\",\n  \"voice\": \"PASTE voice/tone from 04-outreach-plan.md — must include founder-validation framing\",\n  \"constraints\": \"No invented facts. ≤120 words. One CTA. Include validation disclaimer: working on new product, want to know if wrong.\",\n  \"sender_name\": \"Julian Berlow\",\n  \"sender_signature\": \"Julian Berlow — Pragmatic AI Systems · berlow.de\",\n  \"impressum_line\": \"Impressum: https://berlow.de/impressum | Datenschutz: https://berlow.de/datenschutz\",\n  \"angles\": {\n    \"0\": \"PASTE Week 0 angle — Liege ich daneben? pain + product sketch + validation ask\",\n    \"1\": \"PASTE Week 1 angle — reframe pain (cost/risk/time), social proof or mini-case\",\n    \"2\": \"PASTE Week 2 angle — reply-stop, easy out, door open\"\n  }\n}",
         "options": {}
       }
     },
@@ -259,7 +259,7 @@
       "position": [3120, -80],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SET search_path TO hermes_outreach;\nUPDATE outreach_state\nSET sequence_step = CASE WHEN sequence_step < 2 THEN sequence_step + 1 ELSE sequence_step END,\n    next_send_at = CASE\n      WHEN sequence_step = 0 THEN now() + interval '3 days'\n      WHEN sequence_step = 1 THEN now() + interval '2 days'\n      ELSE NULL\n    END,\n    status = CASE WHEN sequence_step >= 2 THEN 'completed' ELSE 'in_sequence' END,\n    updated_at = now()\nWHERE id = $1\nRETURNING id, sequence_step, status, next_send_at;",
+        "query": "SET search_path TO hermes_outreach;\nUPDATE outreach_state\nSET sequence_step = CASE WHEN sequence_step < 2 THEN sequence_step + 1 ELSE sequence_step END,\n    next_send_at = CASE\n      WHEN sequence_step = 0 THEN now() + interval '7 days'\n      WHEN sequence_step = 1 THEN now() + interval '7 days'\n      ELSE NULL\n    END,\n    status = CASE WHEN sequence_step >= 2 THEN 'completed' ELSE 'in_sequence' END,\n    updated_at = now()\nWHERE id = $1\nRETURNING id, sequence_step, status, next_send_at;",
         "options": {
           "queryReplacement": "={{ $('Prepare Send Record').item.json.state_id }}"
         }

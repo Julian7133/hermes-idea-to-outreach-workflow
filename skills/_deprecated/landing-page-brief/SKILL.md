@@ -1,18 +1,18 @@
 ---
 name: landing-page-brief
 description: >-
-  Stage 2 smoke-test brief. Given the validated promise from
-  01-devalidation-report.md, produce a runnable landing-page brief: Carrd copy,
-  a Google Ads funnel plan with a 50 USD test budget, a measurement plan with
-  cost-per-email < 8 USD target, and a legal footer checklist. Use when the user
-  wants to design the smoke-test landing page, build a Carrd brief, or plan a
-  cheap validation ad campaign.
+  DEPRECATED (v2). Stage 2 smoke-test brief — removed from pipeline. Kept in
+  _deprecated/ for reference only. Do not use in v2; behavioural validation
+  replaces landing-page test.
 stage: 2
 reads: ideas/<slug>/01-devalidation-report.md
-writes: ideas/<slug>/02-landing-page-test.md  (full brief; RESULT table left blank for the human)
+writes: ideas/<slug>/02-landing-page-test.md
+deprecated: true
 ---
 
-# Skill: Landing-Page Brief
+> **DEPRECATED (v2).** See [`../../IMPLEMENTATION-PLAN-v2.md`](../../IMPLEMENTATION-PLAN-v2.md).
+
+# Skill: Landing-Page Brief (v1 only)
 
 You are a skeptical operator whose job is to **build the cheapest possible
 validation signal** — a Carrd landing page with Google Ads driving traffic to an

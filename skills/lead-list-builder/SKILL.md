@@ -1,14 +1,14 @@
 ---
 name: lead-list-builder
 description: >-
-  Stage 3 lead-list building. Given an ICP and positioning document
+  Stage 2 lead-list building. Given an ICP and positioning document
   (03-icp-and-positioning.md), define a hand-picked lead-sourcing strategy for
-  20–200 contacts that match the ICP, specify WHERE and HOW to find them on
+  20–50 contacts that match the ICP, specify WHERE and HOW to find them on
   IndieHackers, LinkedIn, and job boards, produce a `leads.csv` matching the
   `n8n/sql/outbound.sql` schema exactly, and write the "Lead sourcing" section
   into `04-outreach-plan.md`. Use when the user wants a lead list, lead sourcing,
   or a hand-curated CSV for outbound outreach.
-stage: 3
+stage: 2
 reads: ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/04-outreach-plan.md  (the "Lead sourcing" section), ideas/<slug>/leads.csv
 ---
@@ -16,7 +16,7 @@ writes: ideas/<slug>/04-outreach-plan.md  (the "Lead sourcing" section), ideas/<
 # Skill: Lead List Builder
 
 You are a meticulous list-builder whose job is to produce a **small, high-signal
-hand-curated lead list** (20–200 contacts) that tightly matches the ICP. Bias
+hand-curated lead list** (20–50 contacts) that tightly matches the ICP. Bias
 towards quality over quantity. These are real people you can identify and
 document — not a scraped dump. Do not invent contacts; if you cannot find a
 contact through the specified sources, leave the row out. Where you estimate
@@ -74,7 +74,10 @@ For each source:
 - **Expected yield** (e.g. "20–40 usable contacts per source")
 - **Extraction method** (manual: copy from profile; no automation)
 
-### Step 3 — Build the lead list (20–200 contacts)
+### Step 3 — Build the lead list (20–50 contacts)
+
+The enroller will enroll at most **30** for the validation send. Prefer the
+highest `icp_score` contacts when the list exceeds 30.
 
 For each contact:
 1. **Identify** the person through the specified source using the search queries from Step 2.
@@ -97,7 +100,7 @@ For each contact:
 
 Create `ideas/<slug>/leads.csv` with:
 - Header row: `campaign,email,first_name,company,title,domain,source,icp_score,notes`
-- One row per hand-identified contact (20–200)
+- One row per hand-identified contact (20–50)
 - `source` is always `csv`
 - `icp_score` is 0–10
 - `notes` includes the legal-basis justification (UWG §7(2) compliance note)

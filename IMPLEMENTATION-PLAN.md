@@ -2,6 +2,11 @@
 
 Stand: 2026-07-07. Greenfield-Projekt, Workspace ist leer.
 
+> **Pipeline v2 (2026-07-08):** Stage 2 landing-page test removed; validation
+> send replaces scale campaign. See [`IMPLEMENTATION-PLAN-v2.md`](IMPLEMENTATION-PLAN-v2.md)
+> for current pipeline behaviour. This document remains authoritative for infra,
+> n8n, Mailgun, Postgres schema, and legal (§7).
+
 ## 0. Grundsatzentscheidungen (aus der Klärungsrunde)
 
 | Entscheidung | Ergebnis |
@@ -66,8 +71,8 @@ hermes-idea-to-outreach-workflow/
 ├── workflows/                    # Markdown-Orchestrierungen (Stage-Abfolge + Gates)
 │   ├── 1-devalidation.md
 │   ├── 2-landing-page-test.md
-│   ├── 3-outreach-prep.md
-│   └── 4-campaign-execution.md
+│   ├── 2-outreach-prep.md
+│   └── 3-validation-send.md
 ├── ideas/<idea-slug>/            # gestaffelte Artefakte pro Idee (siehe Abschnitt 3)
 ├── memory/                       # user_profile.md, market_insights/ (wie Referenz-Repo)
 └── n8n/
@@ -89,7 +94,7 @@ Namensschema nach `hermes-agent-idea-workflow`, Inhalte nach deiner Strategie:
 
 | Artefakt | Stage | Inhalt | Gate danach |
 |---|---|---|---|
-| `00-idea-capture.md` | 0 | Rohidee, Monetarisierungs-Annahme, Micro-SaaS-Fit | — |
+| `00-idea-capture.md` | 0 | Rohidee, Monetarisierungs-Annahme, Solo-Fit | — |
 | `01-devalidation-report.md` | 1 | Output der Prompts 1+2 (TAM, Saturation, CAC/CLV, Difficulty-Score, Go/No-Go) + Boring/Trends-Check. Abbruchregel: Bewertung < 4/10 → sofort stoppen (Token sparen). | `GREENLIGHT NEXT STAGE` |
 | `02-landing-page-test.md` | 2 | Carrd-Brief (Copy generiert aus 01), Google-Ads-Funnel (Budget 50 USD), Messplan. Nach dem Test: Ergebnis eintragen. | Cost/E-Mail < 8 USD, sonst FAIL |
 | `03-icp-and-positioning.md` | 3 | Output Prompts 3–6: ICP, 3 Value Props, Positioning-Wedge, GTM-Mode | — |
@@ -102,7 +107,7 @@ Regeln (aus den Referenz-Repos übernommen): Skills rufen einander nicht auf; de
 
 Schema `hermes_outreach`. Änderungen gegenüber dem Original:
 
-1. **`leads` ersetzt `gms_leads_enriched`** — generische Tabelle für kuratierte Kontakte: `id, campaign, email, first_name, company, title, domain, source (csv|apollo), icp_score, notes, created_at`. Kein Google-Maps-Bezug (das Original-Template zielt auf Local Businesses, unser ICP sind Micro-SaaS-Zielkunden).
+1. **`leads` ersetzt `gms_leads_enriched`** — generische Tabelle für kuratierte Kontakte: `id, campaign, email, first_name, company, title, domain, source (csv|apollo), icp_score, notes, created_at`. Kein Google-Maps-Bezug (das Original-Template zielt auf Local Businesses, unser ICP sind Zielkunden für Solo-Business-Angebote).
 2. **`outreach_state`** — unverändert übernommen, nur `listmonk_subscriber_id` entfällt. Status: `in_sequence | replied | bounced | unsubscribed | completed | suppressed`.
 3. **`outreach_sends`** — unverändert (append-only, `provider_message_id` = Mailgun Message-ID als Event-Matching-Key).
 4. **`outreach_events` (neu)** — für die granulare Diagnose, die das Original nicht hergibt: `id, send_id → outreach_sends, event (delivered|opened|clicked|bounced|complained|unsubscribed), recipient, url (bei Click), client_name, device_type, is_bot boolean, occurred_at, raw jsonb`. Bot-Erkennung siehe Abschnitt 6.

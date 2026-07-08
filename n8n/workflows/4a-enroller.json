@@ -43,7 +43,7 @@
       "position": [520, 0],
       "parameters": {
         "operation": "executeQuery",
-        "query": "SET search_path TO hermes_outreach;\nSELECT l.id AS lead_id, l.campaign, l.email, l.first_name, l.company, l.title, l.domain, l.icp_score\nFROM leads l\nWHERE l.campaign = $1\n  AND lower(l.email) NOT IN (SELECT lower(email) FROM suppression)\n  AND l.id NOT IN (SELECT lead_id FROM outreach_state)\nORDER BY coalesce(l.icp_score, 0) DESC, l.created_at ASC\nLIMIT $2;",
+        "query": "SET search_path TO hermes_outreach;\nSELECT l.id AS lead_id, l.campaign, l.email, l.first_name, l.company, l.title, l.domain, l.icp_score\nFROM leads l\nWHERE l.campaign = $1\n  AND lower(l.email) NOT IN (SELECT lower(email) FROM suppression)\n  AND l.id NOT IN (SELECT lead_id FROM outreach_state)\n  AND (SELECT count(*) FROM outreach_state WHERE campaign = $1) < 30\nORDER BY coalesce(l.icp_score, 0) DESC, l.created_at ASC\nLIMIT $2;",
         "options": {
           "queryReplacement": "={{ $json.campaign }},={{ $json.max_new_per_day }}"
         }

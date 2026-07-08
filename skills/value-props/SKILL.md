@@ -1,12 +1,12 @@
 ---
 name: value-props
 description: >-
-  Stage 3 value propositions. Given the devalidation report and the ICP section
+  Stage 2 value propositions. Given the devalidation report and the ICP section
   of the positioning doc, produce exactly 3 value propositions, each mapped to
   a specific ICP pain or gain, sharpened through the Hormozi value-equation lens.
   Use when the user wants value propositions, value props, or Hormozi-style
   benefit framing for their ICP.
-stage: 3
+stage: 2
 reads: ideas/<slug>/01-devalidation-report.md, ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/03-icp-and-positioning.md  (the "Value propositions" section only)
 ---
@@ -82,7 +82,7 @@ The proposition statement itself should:
 
 - State the **outcome** the ICP member gets.
 - Hint at **speed** or **effort reduction** (the two Hormozi levers that
-  matter most for solo-founder products).
+  matter most for a solo business).
 - Be non-generic: if it could apply to any competitor, rewrite it.
 
 The arrow notation (`→`) after each proposition maps it back to the pain,

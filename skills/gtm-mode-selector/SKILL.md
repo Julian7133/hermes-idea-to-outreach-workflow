@@ -1,7 +1,7 @@
 ---
 name: gtm-mode-selector
 description: >-
-  Stage 3 GTM mode selection. Given the devalidation report and the ICP &
+  Stage 2 GTM mode selection. Given the devalidation report and the ICP &
   positioning document, choose the single go-to-market motion (founder-led cold
   outbound, community-led, content/SEO, paid ads, partnerships) that best fits
   the ICP's awareness level and the wedge. Since this pipeline drives a cold-
@@ -9,7 +9,7 @@ description: >-
   primary motion and say why the chosen motion beats the alternatives. Use when
   the user wants to pick a GTM motion, select a go-to-market strategy, or decide
   how to reach the ICP.
-stage: 3
+stage: 2
 reads: ideas/<slug>/01-devalidation-report.md, ideas/<slug>/03-icp-and-positioning.md
 writes: ideas/<slug>/03-icp-and-positioning.md  (the "GTM mode" section only)
 ---
@@ -75,7 +75,13 @@ motion:
 - Call out the specific risk if outbound is chosen (e.g., list quality,
   inbox deliverability, message fatigue).
 
-### Step 4 — Pick the single best motion and kill the rest
+This is the axis that matters for a cold-outreach play: **Steal** means the
+ICP already pays for a known solution and you're stealing a slice with a
+better wedge; **Stimulate** means the ICP doesn't yet know the problem and
+you must educate the market before you can sell. Label the chosen mode and
+explain why it matches the awareness level and the wedge.
+
+### Step 5 — Pick the single best motion and kill the rest
 
 Choose the motion with the highest fit score. If there is a tie, pick the one
 with the lowest resource requirement. The losing motions get a one-line
@@ -87,7 +93,8 @@ Write into `ideas/<slug>/03-icp-and-positioning.md`, appending (or inserting)
 the **GTM mode** section of that template:
 
 ```markdown
-## GTM mode (gtkm-mode-selector)
+## GTM mode (gtm-mode-selector)
+- **Opportunity mode:** Steal | Expand | Defend | Stimulate
 - **Chosen motion:** <...>
 - **Why it fits this ICP + wedge:** <...>
 ```
