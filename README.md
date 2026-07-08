@@ -24,6 +24,16 @@ cp -r ideas/_TEMPLATE ideas/my-idea-slug
 The agent follows `workflows/1-devalidation.md` → `2` → `3`, pausing at each
 human gate. Say **`GREENLIGHT NEXT STAGE`** to advance.
 
+Stage 1 is a **skill chain** (not a single prompt): `trend-analysis` →
+`competitor-mapper` → `desire-evaluator` → `pricing-and-wtp` →
+`distribution-analysis` → `retention-predictor` → `cac-modeler` →
+`boring-and-trends-check` → `idea-scoring` → `gtm-mode-selector` →
+`decision-memo`. Each step writes a structured JSON file under
+`ideas/<slug>/` (plus one `memory/market_insights/` brief); the chain assembles
+`01-devalidation-report.md`. Verdict `drop` (score < 40/100) aborts the idea.
+See [`workflows/1-devalidation.md`](workflows/1-devalidation.md) and a filled
+example in [`ideas/_sample-validation-run/`](ideas/_sample-validation-run/).
+
 ## Quick start (execution side)
 
 ```bash

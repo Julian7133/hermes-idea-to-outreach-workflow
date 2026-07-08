@@ -1,0 +1,8 @@
+---
+description: Stage 1 (pivot verdict only) — classify weak dimensions by root cause and failure mode. Writes weaknesses.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/weakness-detection/SKILL.md` exactly. Runs only when `scores.json.verdict` is `pivot`. Read `scores.json` + dims; write `ideas/<slug>/weaknesses.json`. Never advance the human gate.

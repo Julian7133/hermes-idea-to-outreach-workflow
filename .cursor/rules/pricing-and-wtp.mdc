@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 4 — model B2B WTP (per-seat/per-account) via Van Westendorp + desire premium + competitor pricing. Writes pricing.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/pricing-and-wtp/SKILL.md` exactly. Read `00`, `competitors.json`, `desire_scores.json`, market_insights; write `ideas/<slug>/pricing.json`. No freemium-as-default. Never advance the human gate.

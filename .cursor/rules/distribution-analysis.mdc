@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 5 — evaluate ICP reachability and B2B channels (SEO, cold outbound, communities, partnerships, paid search). Writes distribution.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/distribution-analysis/SKILL.md` exactly. Read `00`, `competitors.json`, `memory/user_profile.md`; write `ideas/<slug>/distribution.json`. No k-factor/ASO/creator-economy. Never advance the human gate.

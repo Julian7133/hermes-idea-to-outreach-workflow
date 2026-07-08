@@ -1,0 +1,9 @@
+---
+description: Stage 1 exit — assemble the devalidation decision brief (verdict, strengths/risks, RAT, pre-mortem, kill criteria) into 01-devalidation-report.md.
+globs:
+  - "ideas/**/01-devalidation-report.md"
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/decision-memo/SKILL.md` exactly. Read `scores.json` + dimension JSONs; write `ideas/<slug>/01-devalidation-report.md` (~400-600 words). The RAT references `workflows/2-landing-page-test.md`. Never advance the human gate.

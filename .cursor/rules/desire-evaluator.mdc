@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 3 — score core buyer desires (survival/status/belonging/control/curiosity) and pain intensity for the B2B ICP. Writes desire_scores.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/desire-evaluator/SKILL.md` exactly. Read `00-idea-capture.md` + `memory/extra-context/core-human-desires.md`, write `ideas/<slug>/desire_scores.json`. Never advance the human gate.

@@ -2,8 +2,7 @@
 
 Every skill in this repo is exactly **one job**. Follow this format so the
 orchestrator (`workflows/*.md`) can chain them. The canonical example is
-[`clearframe-devalidation/SKILL.md`](clearframe-devalidation/SKILL.md) — match
-its shape.
+[`idea-scoring/SKILL.md`](idea-scoring/SKILL.md) — match its shape.
 
 ## Required structure of `<skill>/SKILL.md`
 
@@ -36,12 +35,35 @@ its shape.
 - **Never advance a human gate.** Gates need `GREENLIGHT NEXT STAGE` from a human.
 - **Match the exemplar's tone:** operator-grade, skeptical, concise, no fluff.
 
-## Which template section each skill fills
+## Structured JSON outputs (Stage 1 chain)
 
-| Skill | Writes → artifact (section) |
+Stage 1 is a **skill chain** (`workflows/1-devalidation.md`). Each dimension skill
+writes a small, fixed-schema JSON file to `ideas/<slug>/`; `idea-scoring` reads
+them and `decision-memo` assembles the `01` report. The JSON schemas are the
+integration contract — do not add, drop, or rename keys without updating
+`idea-scoring` and `decision-memo` together. Files: `desire_scores.json`,
+`competitors.json`, `pricing.json`, `distribution.json`, `retention.json`,
+`cac.json`, `boring_trends.json`, `scores.json`, `gtm_mode.json`, and (pivot
+verdict only) `weaknesses.json`, `pivot_options.json` + `pivot_report.md`.
+`trend-analysis` writes `memory/market_insights/<niche>-<YYYY>-<MM>.md`.
+
+## Which artifact each skill writes
+
+| Skill | Writes |
 |---|---|
-| clearframe-devalidation | `01` — Verdict + CLEARFRAME/Market Reality |
-| boring-and-trends-check | `01` — Boring & Trends |
+| trend-analysis | `memory/market_insights/<niche>-<YYYY>-<MM>.md` |
+| competitor-mapper | `ideas/<slug>/competitors.json` |
+| desire-evaluator | `ideas/<slug>/desire_scores.json` |
+| pricing-and-wtp | `ideas/<slug>/pricing.json` |
+| distribution-analysis | `ideas/<slug>/distribution.json` |
+| retention-predictor | `ideas/<slug>/retention.json` |
+| cac-modeler | `ideas/<slug>/cac.json` |
+| boring-and-trends-check | `ideas/<slug>/boring_trends.json` |
+| idea-scoring | `ideas/<slug>/scores.json` |
+| gtm-mode-selector | `ideas/<slug>/gtm_mode.json` (Stage 3 reuse also fills `03` GTM section) |
+| weakness-detection *(pivot only)* | `ideas/<slug>/weaknesses.json` |
+| pivot-engine *(pivot only)* | `ideas/<slug>/pivot_options.json` + `pivot_report.md` |
+| decision-memo | `01-devalidation-report.md` (Stage 1 exit artifact) |
 | landing-page-brief | `02` — full brief (results filled by human) |
 | icp-profiler | `03` — ICP |
 | value-props | `03` — Value propositions |

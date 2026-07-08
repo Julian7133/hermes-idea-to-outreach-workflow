@@ -1,0 +1,8 @@
+---
+description: Stage 1 (pivot verdict only) — generate 2-3 evidence-backed B2B pivot options with score simulation. Writes pivot_options.json + pivot_report.md.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/pivot-engine/SKILL.md` exactly. Runs only when verdict is `pivot`, after weakness-detection. Read `weaknesses.json`, `scores.json`, dims, market_insights; write `ideas/<slug>/pivot_options.json` + `pivot_report.md`. Never advance the human gate.

@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 6 — predict B2B retention (embeddedness, logo churn, NRR, switching cost). Writes retention.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/retention-predictor/SKILL.md` exactly. Read `00` + `desire_scores.json`; write `ideas/<slug>/retention.json`. No D30 app retention. Never advance the human gate.

@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 7 — model LTV and CAC per B2B channel, LTV:CAC, payback, viability. Writes cac.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/cac-modeler/SKILL.md` exactly. Read `pricing.json`, `retention.json`, `distribution.json`, `competitors.json`, `user_profile.md`, market_insights; write `ideas/<slug>/cac.json`. B2B channels only. Never advance the human gate.

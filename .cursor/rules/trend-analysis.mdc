@@ -1,0 +1,9 @@
+---
+description: Stage 1 chain step 1 — sweep G2/Capterra/Reddit/LinkedIn/Google Trends/job boards/IndieHackers for a niche; write one market_insights file per niche per month. No App Store/TikTok.
+globs:
+  - "ideas/**/00-idea-capture.md"
+  - "memory/market_insights/**"
+alwaysApply: false
+---
+
+Follow `skills/trend-analysis/SKILL.md` exactly. Read `00-idea-capture.md`, check for a fresh existing `memory/market_insights/` file (offer reuse), else research and write `memory/market_insights/<niche>-<YYYY>-<MM>.md`. B2B evidence only. Never advance the human gate.

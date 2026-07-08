@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 9 — aggregate 7 dimensions into a 0-100 score + verdict via multiplicative-floor algorithm and RAT. Refuses with <3 of 7 dims. Writes scores.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/idea-scoring/SKILL.md` exactly. Read the dimension JSONs + `user_profile.md`; write `ideas/<slug>/scores.json`. Enforce the minimum-data rule (Demand + Distribution mandatory). Verdict `drop` (<40) → abort. Never advance the human gate.

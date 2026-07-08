@@ -30,7 +30,7 @@ workflows** against **Postgres** and sends through **Mailgun** (see `n8n/`).
 | Stage | Skill(s) | Reads | Writes | Gate |
 |---|---|---|---|---|
 | 0 | (manual capture) | — | `00-idea-capture.md` | — |
-| 1 | `clearframe-devalidation`, `boring-and-trends-check` | `00` | `01-devalidation-report.md` | Score ≥ 4/10 **and** `GREENLIGHT NEXT STAGE` |
+| 1 | **chain** (`workflows/1-devalidation.md`): `trend-analysis` → `competitor-mapper` → `desire-evaluator` → `pricing-and-wtp` → `distribution-analysis` → `retention-predictor` → `cac-modeler` → `boring-and-trends-check` → `idea-scoring` → `gtm-mode-selector` → `decision-memo`. `weakness-detection` + `pivot-engine` run only on a `pivot` verdict. | `00` | per-skill JSON in `ideas/<slug>/` + `memory/market_insights/…` → `01-devalidation-report.md` | Verdict not `drop` (score ≥ 40/100) **and** `GREENLIGHT NEXT STAGE` |
 | 2 | `landing-page-brief` | `01` | `02-landing-page-test.md` | Cost per e-mail < 8 USD |
 | 3 | `icp-profiler`, `value-props`, `competitive-wedge`, `gtm-mode-selector` | `01`, `02` | `03-icp-and-positioning.md` | — |
 | 3 | `outreach-assets`, `lead-list-builder` | `03` | `04-outreach-plan.md` + `leads.csv` | `GREENLIGHT NEXT STAGE` → campaign |
@@ -38,8 +38,10 @@ workflows** against **Postgres** and sends through **Mailgun** (see `n8n/`).
 
 ## Hard rules
 
-- **Stage 1 abort rule:** if the devalidation score is `< 4/10`, stop immediately
-  and mark the idea `dropped`. Do not spend tokens on later stages.
+- **Stage 1 abort rule:** if `idea-scoring` returns verdict `drop` (final score
+  `< 40/100`), stop immediately and mark the idea `dropped`. Do not spend tokens
+  on later stages. `idea-scoring` also refuses to score with fewer than 3 of 7
+  dimensions (Demand and Distribution mandatory).
 - **No invented facts.** Skills reason from the captured idea and cited market
   signals only. If a number is an assumption, label it `ASSUMPTION:`.
 - **Structured output only.** Every skill writes Markdown (or JSON where noted),

@@ -1,0 +1,8 @@
+---
+description: Stage 1 chain step 2 — map direct/indirect/substitute/emerging competitors via G2/Capterra/Product Hunt/Reddit; mine 1-star/3-star reviews; score saturation. Writes competitors.json.
+globs:
+  - "ideas/**"
+alwaysApply: false
+---
+
+Follow `skills/competitor-mapper/SKILL.md` exactly. Read `00-idea-capture.md` + market_insights, write `ideas/<slug>/competitors.json` to the fixed schema. No App Store. Never advance the human gate.

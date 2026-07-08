@@ -10,7 +10,7 @@ idea folder (`ideas/<idea-slug>/`). Skills are self-contained `SKILL.md` files.
 
 | If the user wants to… | Run skill | Reads → Writes |
 |---|---|---|
-| Devalidate / kill-or-keep an idea | `clearframe-devalidation` + `boring-and-trends-check` | `00` → `01-devalidation-report.md` |
+| Devalidate / kill-or-keep an idea | **Run the Stage 1 chain** via `workflows/1-devalidation.md`: `trend-analysis`, `competitor-mapper`, `desire-evaluator`, `pricing-and-wtp`, `distribution-analysis`, `retention-predictor`, `cac-modeler`, `boring-and-trends-check`, `idea-scoring`, `gtm-mode-selector`, `decision-memo` (+ `weakness-detection`, `pivot-engine` on a `pivot` verdict) | `00` → per-skill JSON in `ideas/<slug>/` + `memory/market_insights/…` → `01-devalidation-report.md` |
 | Design the smoke-test landing page | `landing-page-brief` | `01` → `02-landing-page-test.md` |
 | Define the ideal customer | `icp-profiler` | `01`,`02` → `03-icp-and-positioning.md` |
 | Write value propositions | `value-props` | `01`,`03` → `03-icp-and-positioning.md` |
@@ -24,7 +24,9 @@ idea folder (`ideas/<idea-slug>/`). Skills are self-contained `SKILL.md` files.
 
 1. **Human gates.** Advance a stage only after the reviewer types
    `GREENLIGHT NEXT STAGE`. Reviews are `PASS` / `PASS WITH CHANGES` / `FAIL`.
-2. **Stage 1 abort rule.** Devalidation score `< 4/10` → stop, mark `dropped`.
+2. **Stage 1 abort rule.** `idea-scoring` verdict `drop` (score `< 40/100`) →
+   stop, mark `dropped`. Scoring refuses with < 3 of 7 dimensions (Demand +
+   Distribution mandatory).
 3. **Skills do not call skills.** The `workflows/*.md` orchestrator passes
    artifacts. Each skill reads one artifact and writes one artifact.
 4. **No invented facts.** Label assumptions `ASSUMPTION:`.
