@@ -82,7 +82,7 @@ The proposition statement itself should:
 
 - State the **outcome** the ICP member gets.
 - Hint at **speed** or **effort reduction** (the two Hormozi levers that
-  matter most for solo-founder products).
+  matter most for a solo business).
 - Be non-generic: if it could apply to any competitor, rewrite it.
 
 The arrow notation (`→`) after each proposition maps it back to the pain,

@@ -7,7 +7,7 @@ and factual; update as you learn.
 - **Name / handle:** <…>
 - **Company / brand:** berlow (sending domain `out.berlow.de`)
 - **Region:** DACH-based → mind UWG §7(2) for outreach (see plan §7).
-- **Capacity:** solo micro-SaaS; prefers small, defensible, "boring" niches.
+- **Capacity:** solo business; prefers small, defensible, "boring" niches.
 
 ## Constraints & preferences
 - Small hand-picked lists (20–50 for validation; max 30 enrolled), 1:1 tone, no bulk-mail optics.

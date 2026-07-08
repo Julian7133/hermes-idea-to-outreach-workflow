@@ -20,5 +20,6 @@
 - **The one wedge we win on:** <…>
 
 ## GTM mode (gtm-mode-selector)
+- **Opportunity mode:** <Steal | Expand | Defend | Stimulate>
 - **Chosen motion:** <…>
 - **Why it fits this ICP + wedge:** <…>

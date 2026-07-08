@@ -7,7 +7,7 @@ noted below.
 
 ## 0. Design goal (one sentence)
 
-**Kill bad B2B micro-SaaS or bad B2B productized service ideas as fast and automatically as possible; only spend outreach or manual human effort on ideas that survived desk devalidation.**
+**Kill bad B2B solo-business ideas (micro-SaaS, productized service, consulting) as fast and automatically as possible; only spend outreach or manual human effort on ideas that survived desk devalidation.**
 
 Out of scope for v2: pivot loops, landing-page branches, scale campaigns,
 post-validation optimization paths.

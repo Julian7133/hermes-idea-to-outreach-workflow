@@ -31,6 +31,10 @@ idea folder (`ideas/<idea-slug>/`). Skills are self-contained `SKILL.md` files.
 3. **Skills do not call skills.** The `workflows/*.md` orchestrator passes
    artifacts. Each skill reads one artifact and writes one artifact.
 4. **No invented facts.** Label assumptions `ASSUMPTION:`.
+   **Live research before market verdicts:** skills that make market claims
+   (`clearframe-devalidation`, `boring-and-trends-check`, `competitive-wedge`,
+   `icp-profiler`) must run live web research and cite sources before scoring or
+   positioning — internal model knowledge alone is never sufficient.
 5. **Legal before send.** UWG §7(2) / GDPR — see `IMPLEMENTATION-PLAN.md` §7.
 6. **No landing-page stage.** Do not read or write `02-landing-page-test.md`.
 

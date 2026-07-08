@@ -22,9 +22,11 @@ Run in order; each reads `01` only:
 
 ## Part B — Outreach assets (`04-outreach-plan.md` + `leads.csv`)
 
-5. **`outreach-assets`** → 1PMP, **3-step weekly drip** (Week 0/1/2), Offer/CTA/Voice
-   JSON block. Copy uses **founder-validation framing** (sounds like sales, honest
-   "liege ich falsch?" disclaimer on Touch 0). Paste config into n8n 4b-sender.
+5. **`outreach-assets`** → **Avatar**, **1PMP (9-square framework)**, **3-step weekly drip** (Week 0/1/2), Offer/CTA/Voice
+   JSON block. The avatar and 1PMP are written *before* the drip so they become the
+   basis for the copy and the n8n 4b-sender config. Copy uses **founder-validation framing**
+   (sounds like sales, honest "liege ich falsch?" disclaimer on Touch 0). Paste config
+   into n8n 4b-sender.
 6. **`lead-list-builder`** → sourcing strategy + `leads.csv` (**20–50** rows).
    Enroller caps at **30** leads (by `icp_score`, no operator action needed).
 

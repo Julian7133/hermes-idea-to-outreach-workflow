@@ -59,7 +59,10 @@ competitive saturation, typical buyer sophistication).
 Identify the specific channels, communities, forums, social groups, or events
 where this segment actually spends time. Name them — r/, specific subreddits,
 LinkedIn groups, Discord servers, Slack communities, industry forums, conference
-names. No generic "social media" or "online."
+names. No generic "social media" or "online." **Verify each named community
+exists and is active via a live web search** (communities die, rename, or
+migrate); cite what you verified. A lead list built on a dead community wastes
+the validation send.
 
 ### Step 6 — Pin the buying trigger
 

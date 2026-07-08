@@ -14,17 +14,22 @@
 ## Steps (orchestrator passes artifacts; skills never call each other)
 
 1. **Precondition.** Confirm `00-idea-capture.md` exists and has a monetization
-   assumption and a micro-SaaS-fit note. If not, stop and ask the user to fill it.
-2. **Run `clearframe-devalidation`.** Input: `00`. It produces CLEARFRAME +
+   assumption and a solo-fit note. If not, stop and ask the user to fill it.
+2. **Run `clearframe-devalidation`.** Input: `00`. It **starts with mandatory
+   live web research** (verify the core premise, competitor pricing, cited
+   stats, demand signals — see the skill's Part 0), then produces CLEARFRAME +
    Market Reality Evaluator output: TAM, saturation, CAC/CLV sanity, difficulty
-   score, and a Go/No-Go with a **0–10 score**.
+   score, cited market signals, and a Go/No-Go with a **0–10 score**. A verdict
+   without a populated "Cited market signals" section is invalid — do not
+   accept it.
 3. **Auto-abort (no human gate).** If the score is `< 4/10`: write
    `01-devalidation-report.md` with the verdict `NO-GO`, set `00`'s frontmatter
    `status: dropped`, and **stop immediately**. Do not run the trends check. Do
    **not** ask for `GREENLIGHT`. Report the kill reason in one line.
 4. **Run `boring-and-trends-check`.** Input: `00` + the `clearframe` output.
-   Confirms the idea is "boring/niche enough to be defensible" and backs it with
-   **two independent trends** (one sociological, one technological).
+   Confirms the idea is "boring/niche enough to be defensible" and identifies
+   **two independent, active trends** (one sociological, one technological)
+   through live research — do not only verify trends the user already named.
 5. **Assemble `01-devalidation-report.md`** from both skill outputs, following
    the artifact template. Include the final score, Go/No-Go, and the two trends.
 

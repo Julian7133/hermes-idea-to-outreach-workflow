@@ -12,11 +12,13 @@ stage: 0
 <What is it, in 2–3 sentences? Who is it for and what does it let them do?>
 
 ## Monetization assumption
-<How does this make money? Price point, model (subscription / one-off / usage).>
+<How does this make money? Price point, model (subscription / one-off project /
+retainer / usage). Price points can range from €50/Mo to €3–5k projects; say
+what the buyer pays and how often.>
 
-## Micro-SaaS fit
-<Why is this a good micro-SaaS? Small scope, narrow ICP, buildable solo,
-recurring pain. Note anything that makes it a poor fit.>
+## Solo fit
+<Why is this a good solo business? Small scope, narrow ICP, buildable/deliverable
+solo, recurring or repeatable revenue. Note anything that makes it a poor fit.>
 
 ## Trigger / why now
 <What made you think of this? Any signal that demand exists.>

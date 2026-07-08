@@ -47,6 +47,14 @@ Workflow files: `1-devalidation.md` → `2-outreach-prep.md` →
   mark `dropped`, do not ask for `GREENLIGHT`. Do not spend tokens on later stages.
 - **No invented facts.** Skills reason from the captured idea and cited market
   signals only. If a number is an assumption, label it `ASSUMPTION:`.
+- **Live research before market verdicts.** Any skill that makes market claims
+  (competitor landscape, pricing, market gaps, trends, cited statistics) must run
+  **live web research first** — internal model knowledge alone is never sufficient,
+  because it is stale by months. Verify the idea's core premise (e.g. "no tool
+  exists for X") before scoring it; a refuted premise is itself a kill reason.
+  Every verified claim gets a source link; whatever cannot be verified stays
+  labelled `ASSUMPTION:`. Applies to `clearframe-devalidation`,
+  `boring-and-trends-check`, `competitive-wedge`, and `icp-profiler`.
 - **Structured output only.** Every skill writes Markdown (or JSON where noted),
   matching the template in its `SKILL.md`.
 - **Legal gate before any real send.** Read [`IMPLEMENTATION-PLAN.md` §7](IMPLEMENTATION-PLAN.md)
