@@ -1,0 +1,173 @@
+{
+  "name": "4a — Enroller",
+  "nodes": [
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902001",
+      "name": "Schedule Hourly",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902002",
+      "name": "Get Campaign Configs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [260, 0],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT campaign, daily_send_cap, max_new_per_day, send_window_start, send_window_end, min_gap_seconds, timezone\nFROM outreach_config;"
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902003",
+      "name": "Select Eligible Leads",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [520, 0],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT l.id AS lead_id, l.campaign, l.email, l.first_name, l.company, l.title, l.domain, l.icp_score\nFROM leads l\nWHERE l.campaign = $1\n  AND lower(l.email) NOT IN (SELECT lower(email) FROM suppression)\n  AND l.id NOT IN (SELECT lead_id FROM outreach_state)\nORDER BY coalesce(l.icp_score, 0) DESC, l.created_at ASC\nLIMIT $2;",
+        "options": {
+          "queryReplacement": "={{ $json.campaign }},={{ $json.max_new_per_day }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902004",
+      "name": "Has Eligible Leads",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [780, 0],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-lead-id",
+              "leftValue": "={{ $json.lead_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902005",
+      "name": "Enroll Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1040, -80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO outreach_state (lead_id, campaign, status, sequence_step, next_send_at)\nVALUES ($1, $2, 'in_sequence', 0, now())\nRETURNING id AS state_id, lead_id, campaign;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }},={{ $json.campaign }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "b1b2c3d4-e5f6-4789-a012-345678902006",
+      "name": "No Eligible Leads",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1040, 120],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Schedule Hourly": {
+      "main": [
+        [
+          {
+            "node": "Get Campaign Configs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Campaign Configs": {
+      "main": [
+        [
+          {
+            "node": "Select Eligible Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Eligible Leads": {
+      "main": [
+        [
+          {
+            "node": "Has Eligible Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Eligible Leads": {
+      "main": [
+        [
+          {
+            "node": "Enroll Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Eligible Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

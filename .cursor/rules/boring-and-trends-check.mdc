@@ -1,0 +1,9 @@
+---
+description: Stage 1 trends check. Follow skills/boring-and-trends-check/SKILL.md.
+globs:
+  - "ideas/**/00-idea-capture.md"
+  - "ideas/**/01-devalidation-report.md"
+alwaysApply: false
+---
+
+Follow `skills/boring-and-trends-check/SKILL.md` exactly. Stage 1 trends check. Given a devalidated idea (01-devalidation-report.md) that scored ≥ 4/10, confirm the idea is boring/niche enough to be defensible (unsexy, narrow, low hype = fewer well-funded competitors) and back it with exactly two independent trends — one sociological, one technological — each named and justified with why it lifts THIS idea. Use when the user wants to check defensibility via unsexy positioning or validate the why-now signal. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

@@ -1,0 +1,179 @@
+{
+  "name": "5 — Diagnostics",
+  "nodes": [
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905002",
+      "name": "Schedule Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 200],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905003",
+      "name": "Campaign Slug",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [260, 100],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"campaign\": \"example-campaign\",\n  \"idea_slug\": \"example-campaign\",\n  \"report_path\": \"/data/ideas/example-campaign/05-campaign-diagnostics.md\"\n}",
+        "options": {}
+      },
+      "notesInFlow": true,
+      "notes": "Set campaign slug and report path to match ideas/<slug>/05-campaign-diagnostics.md. Mount repo ideas/ into n8n at /data/ideas/ or adjust path."
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905004",
+      "name": "Funnel Metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [520, 100],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT\n  (SELECT count(*) FROM outreach_sends WHERE campaign = $1) AS sent,\n  (SELECT count(DISTINCT send_id) FROM outreach_events WHERE campaign = $1 AND event = 'delivered') AS delivered,\n  (SELECT count(DISTINCT recipient) FROM outreach_events WHERE campaign = $1 AND event = 'opened' AND is_bot = false) AS opened_human,\n  (SELECT count(DISTINCT recipient) FROM outreach_events WHERE campaign = $1 AND event = 'clicked' AND is_bot = false) AS clicked,\n  (SELECT count(*) FROM outreach_state WHERE campaign = $1 AND status = 'replied') AS replied,\n  (SELECT count(*) FROM outreach_events WHERE campaign = $1 AND event = 'complained') AS complaints;",
+        "options": {
+          "queryReplacement": "={{ $json.campaign }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905005",
+      "name": "Opens Without Click",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [780, 100],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT recipient,\n  count(*) FILTER (WHERE event = 'opened' AND is_bot = false) AS opens,\n  count(*) FILTER (WHERE event = 'clicked' AND is_bot = false) AS clicks,\n  max(occurred_at) AS last_event\nFROM outreach_events\nWHERE campaign = $1\nGROUP BY recipient\nHAVING count(*) FILTER (WHERE event = 'opened' AND is_bot = false) > 0\n   AND count(*) FILTER (WHERE event = 'clicked' AND is_bot = false) = 0\nORDER BY opens DESC\nLIMIT 50;",
+        "options": {
+          "queryReplacement": "={{ $('Campaign Slug').item.json.campaign }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905006",
+      "name": "Diagnose and Render",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1040, 100],
+      "parameters": {
+        "jsCode": "const slug = $('Campaign Slug').first().json;\nconst funnel = $('Funnel Metrics').first().json;\nconst noClickRows = $('Opens Without Click').all().map(i => i.json);\n\nconst sent = Number(funnel.sent || 0);\nconst delivered = Number(funnel.delivered || 0);\nconst openedHuman = Number(funnel.opened_human || 0);\nconst clicked = Number(funnel.clicked || 0);\nconst replied = Number(funnel.replied || 0);\nconst complaints = Number(funnel.complaints || 0);\n\nconst deliveredRate = sent > 0 ? delivered / sent : 0;\nconst openRate = delivered > 0 ? openedHuman / delivered : 0;\nconst clickRateOfOpens = openedHuman > 0 ? clicked / openedHuman : 0;\nconst complaintRate = sent > 0 ? complaints / sent : 0;\n\nlet diagnosis = 'Insufficient data — wait for more sends.';\nlet recommendation = 'Continue monitoring.';\n\nif (complaintRate > 0.001) {\n  diagnosis = `Complaint-rate ${(complaintRate * 100).toFixed(2)}% > 0.1% — list or tone problem.`;\n  recommendation = 'Stop (complaint-rate > 0.1%)';\n} else if (sent > 0 && deliveredRate < 0.95) {\n  diagnosis = `Delivered-rate ${(deliveredRate * 100).toFixed(1)}% < 95% — deliverability or list quality issue.`;\n  recommendation = 'Iterate Subject';\n} else if (delivered > 0 && openRate < 0.25) {\n  diagnosis = `Open-rate (human) ${(openRate * 100).toFixed(1)}% < ~25% — subject or sender problem.`;\n  recommendation = 'Iterate Subject';\n} else if (openedHuman > 0 && clickRateOfOpens < 0.03) {\n  diagnosis = `Opens ok (${openedHuman}), click-rate ${(clickRateOfOpens * 100).toFixed(1)}% of opens < ~3% — copy/CTA problem.`;\n  recommendation = 'Iterate Copy';\n} else if (clicked > 0 && replied === 0) {\n  diagnosis = `Clicks ok (${clicked}) but no replies yet — offer or ICP mismatch.`;\n  recommendation = 'Pivot Offer';\n} else if (replied > 0) {\n  diagnosis = `Replies received (${replied}) — sequence producing engagement.`;\n  recommendation = 'Continue monitoring.';\n}\n\nconst noClickTable = noClickRows.length\n  ? noClickRows.map(r => `| ${r.recipient} | ${r.opens} | ${r.clicks} | ${r.last_event} |`).join('\\n')\n  : '| — | — | — | — |';\n\nconst markdown = `# 05 — Campaign Diagnostics\\n\\n> Generated by n8n Workflow 5 on ${new Date().toISOString().slice(0, 10)}.\\n> Opens are a **soft** signal (Apple MPP / scanners inflate them); clicks and\\n> replies are **hard** signals.\\n\\n## Funnel\\n| sent | delivered | opened_human | clicked | replied |\\n|---|---|---|---|---|\\n| ${sent} | ${delivered} | ${openedHuman} | ${clicked} | ${replied} |\\n\\n## Opens without click (per recipient)\\n| recipient | opens | clicks | last_event |\\n|---|---|---|---|\\n${noClickTable}\\n\\n## Diagnosis\\n${diagnosis}\\n\\n## Recommendation\\n${recommendation}\\n\\n## KPI (manually maintained)\\n- **Discovery calls:** <n> / 30\\n- **Preorders:** <n> / ≥1\\n`;\n\nreturn [{\n  json: {\n    campaign: slug.campaign,\n    report_path: slug.report_path,\n    diagnosis,\n    recommendation,\n    funnel: { sent, delivered, opened_human: openedHuman, clicked, replied },\n  },\n  binary: {\n    data: {\n      data: Buffer.from(markdown, 'utf8').toString('base64'),\n      mimeType: 'text/markdown',\n      fileName: '05-campaign-diagnostics.md',\n    }\n  }\n}];"
+      }
+    },
+    {
+      "id": "e1b2c3d4-e5f6-4789-a012-345678905007",
+      "name": "Write Report File",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [1300, 100],
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $json.report_path }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Campaign Slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Daily": {
+      "main": [
+        [
+          {
+            "node": "Campaign Slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campaign Slug": {
+      "main": [
+        [
+          {
+            "node": "Funnel Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Funnel Metrics": {
+      "main": [
+        [
+          {
+            "node": "Opens Without Click",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Opens Without Click": {
+      "main": [
+        [
+          {
+            "node": "Diagnose and Render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diagnose and Render": {
+      "main": [
+        [
+          {
+            "node": "Write Report File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

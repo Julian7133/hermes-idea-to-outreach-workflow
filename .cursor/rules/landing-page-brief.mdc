@@ -1,0 +1,9 @@
+---
+description: Stage 2 smoke-test brief. Follow skills/landing-page-brief/SKILL.md.
+globs:
+  - "ideas/**/01-devalidation-report.md"
+  - "ideas/**/02-landing-page-test.md"
+alwaysApply: false
+---
+
+Follow `skills/landing-page-brief/SKILL.md` exactly. Stage 2 smoke-test brief. Given the validated promise from 01-devalidation-report.md, produce a runnable landing-page brief: Carrd copy, a Google Ads funnel plan with a 50 USD test budget, a measurement plan with cost-per-email < 8 USD target, and a legal footer checklist. Use when the user wants to design the smoke-test landing page, build a Carrd brief, or plan a cheap validation ad campaign. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

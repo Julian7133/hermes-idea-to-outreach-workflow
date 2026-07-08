@@ -1,0 +1,18 @@
+# Secrets — never commit real credentials
+n8n/.env
+.env
+*.local
+
+# Real lead data (PII) — only the CSV template/schema is tracked
+ideas/**/leads.csv
+!ideas/_TEMPLATE/leads.csv
+
+# n8n / Postgres local state
+n8n/data/
+n8n/postgres-data/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.idea/
+.vscode/

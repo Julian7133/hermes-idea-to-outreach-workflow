@@ -1,0 +1,70 @@
+# Hermes Stage-4 local infra: n8n + Postgres 16.
+# Postgres holds BOTH n8n's own tables (public schema) and our outreach schema
+# (hermes_outreach, created by sql/outbound.sql on first init).
+#
+#   cp .env.example .env   # fill values first
+#   docker compose up -d
+#
+# n8n UI: http://localhost:5678
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      # *.sql here runs ONCE, only when the data dir is empty (first init).
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # not published to the host by default; n8n reaches it on the compose network.
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5678:5678"
+    environment:
+      # --- n8n persistence in Postgres (public schema) ---
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      # --- security / access ---
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      # --- URLs (webhooks must be reachable by Mailgun; use a tunnel in dev) ---
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      # --- credentials the workflows read via $env (kept out of the JSON) ---
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
+      MAILGUN_BASE_URL: ${MAILGUN_BASE_URL}
+      MAILGUN_WEBHOOK_SIGNING_KEY: ${MAILGUN_WEBHOOK_SIGNING_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OUTREACH_LLM_MODEL: ${OUTREACH_LLM_MODEL}
+      IMAP_HOST: ${IMAP_HOST}
+      IMAP_PORT: ${IMAP_PORT}
+      IMAP_USER: ${IMAP_USER}
+      IMAP_PASSWORD: ${IMAP_PASSWORD}
+    volumes:
+      - ./data:/home/node/.n8n
+      # Workflow 5 (diagnostics) writes ideas/<slug>/05-campaign-diagnostics.md here.
+      - ../ideas:/data/ideas

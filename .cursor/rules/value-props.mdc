@@ -1,0 +1,9 @@
+---
+description: Stage 3 value propositions. Follow skills/value-props/SKILL.md.
+globs:
+  - "ideas/**/01-devalidation-report.md"
+  - "ideas/**/03-icp-and-positioning.md"
+alwaysApply: false
+---
+
+Follow `skills/value-props/SKILL.md` exactly. Stage 3 value propositions. Given the devalidation report and the ICP section of the positioning doc, produce exactly 3 value propositions, each mapped to a specific ICP pain or gain, sharpened through the Hormozi value-equation lens. Use when the user wants value propositions, value props, or Hormozi-style benefit framing for their ICP. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

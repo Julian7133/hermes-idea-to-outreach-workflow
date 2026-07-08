@@ -1,0 +1,10 @@
+---
+description: Stage 3 ICP profiler. Follow skills/icp-profiler/SKILL.md.
+globs:
+  - "ideas/**/01-devalidation-report.md"
+  - "ideas/**/02-landing-page-test.md"
+  - "ideas/**/03-icp-and-positioning.md"
+alwaysApply: false
+---
+
+Follow `skills/icp-profiler/SKILL.md` exactly. Stage 3 ICP profiler. Given the devalidation report (01) and the landing-page test results (02), define the ideal customer profile grounded in real demand signal. Use when the user wants to nail down the ICP, segment, or who to target first with outreach. Read the named input artifact, write only the specified output section, restate the hard rules (no skill-to-skill calls, no invented facts, structured output), and never advance a human gate (that needs `GREENLIGHT NEXT STAGE`).

@@ -1,0 +1,551 @@
+{
+  "name": "4c — Events + Reply-Stop",
+  "nodes": [
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904001",
+      "name": "Mailgun Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mailgun-events",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "hermes-mailgun-events"
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904002",
+      "name": "Verify Mailgun Signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 0],
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst body = $input.first().json.body || $input.first().json;\nconst sig = body.signature || {};\nconst timestamp = String(sig.timestamp || '');\nconst token = String(sig.token || '');\nconst signature = String(sig.signature || '');\nconst signingKey = $env.MAILGUN_WEBHOOK_SIGNING_KEY || '';\nif (!timestamp || !token || !signature || !signingKey) {\n  return [{ json: { valid: false, reason: 'missing_signature_fields' } }];\n}\nconst hmac = crypto.createHmac('sha256', signingKey);\nhmac.update(timestamp + token);\nconst digest = hmac.digest('hex');\nconst valid = digest === signature;\nreturn [{ json: { valid, body, reason: valid ? 'ok' : 'hmac_mismatch' } }];"
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904003",
+      "name": "Signature Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [520, 0],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sig-valid",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904004",
+      "name": "Respond 406 Invalid Signature",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [780, 160],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"error\": \"invalid signature\" }",
+        "options": {
+          "responseCode": 406
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904005",
+      "name": "Normalize Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, -80],
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\n\nfunction stripIpFields(obj) {\n  if (obj == null || typeof obj !== 'object') return obj;\n  if (Array.isArray(obj)) return obj.map(stripIpFields);\n  const out = {};\n  for (const [k, v] of Object.entries(obj)) {\n    const lk = k.toLowerCase();\n    if (lk === 'ip' || lk.endsWith('-ip') || lk.includes('client-ip') || lk === 'sender-ip') continue;\n    out[k] = stripIpFields(v);\n  }\n  return out;\n}\n\nconst envelope = $('Verify Mailgun Signature').first().json.body;\nconst eventData = envelope['event-data'] || envelope.event_data || {};\nconst rawEvent = (eventData.event || envelope.event || '').toLowerCase();\n\nconst eventMap = {\n  delivered: 'delivered',\n  opened: 'opened',\n  clicked: 'clicked',\n  permanent_fail: 'bounced',\n  failed: 'bounced',\n  complained: 'complained',\n  unsubscribed: 'unsubscribed',\n};\nconst event = eventMap[rawEvent] || rawEvent;\n\nconst recipient = (eventData.recipient || envelope.recipient || '').toLowerCase();\nconst url = eventData.url || null;\nconst clientInfo = eventData['client-info'] || eventData.client_info || {};\nconst client_name = clientInfo['client-name'] || clientInfo.client_name || clientInfo['user-agent'] || null;\nconst device_type = clientInfo['device-type'] || clientInfo.device_type || null;\nconst occurred_at = eventData.timestamp\n  ? new Date(Number(eventData.timestamp) * 1000).toISOString()\n  : new Date().toISOString();\n\nconst userVars = eventData['user-variables'] || eventData.user_variables || {};\nconst messageHeaders = eventData.message?.headers || {};\nlet message_id = messageHeaders['message-id'] || messageHeaders['Message-Id'] || eventData.message?.headers?.['message-id'] || null;\nif (!message_id && eventData.storage && eventData.storage.url) {\n  message_id = eventData.id || null;\n}\n\nconst state_id_hint = userVars.state_id || userVars['v:state_id'] || null;\nconst lead_id_hint = userVars.lead_id || userVars['v:lead_id'] || null;\nconst campaign = userVars.campaign || eventData.tags?.[0] || userVars.tag || null;\n\nconst sanitized = stripIpFields(envelope);\n\nreturn [{\n  json: {\n    event,\n    raw_event: rawEvent,\n    recipient,\n    url,\n    client_name,\n    device_type,\n    occurred_at,\n    message_id,\n    state_id_hint,\n    lead_id_hint,\n    campaign,\n    raw: sanitized,\n    is_bot: false,\n    needs_bot_check: event === 'opened' || event === 'clicked',\n  }\n}];"
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904006",
+      "name": "Lookup Send",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1040, -80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT s.id AS send_id, s.campaign, s.lead_id, s.state_id, s.provider_message_id, s.sent_at,\n  (SELECT occurred_at FROM outreach_events e\n   WHERE e.send_id = s.id AND e.event = 'delivered'\n   ORDER BY e.occurred_at ASC LIMIT 1) AS delivered_at,\n  (SELECT count(*) FROM outreach_events e\n   WHERE e.send_id = s.id AND e.event = 'clicked'\n   AND e.occurred_at > now() - interval '2 minutes') AS recent_clicks\nFROM outreach_sends s\nWHERE ($1::bigint IS NOT NULL AND s.state_id = $1::bigint)\n   OR ($2::text IS NOT NULL AND s.provider_message_id = $2)\nORDER BY s.sent_at DESC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.state_id_hint }},={{ $json.message_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904007",
+      "name": "Bot Flag Heuristics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, -80],
+      "parameters": {
+        "jsCode": "const evt = $('Normalize Event').first().json;\nconst send = $input.first().json || {};\nlet is_bot = false;\n\nconst client = (evt.client_name || '').toLowerCase();\nconst appleProxy = /apple|mpp|proxy|icloud|macos|iphone|ipad/.test(client);\n\nif (evt.event === 'opened') {\n  if (appleProxy) {\n    is_bot = true;\n  } else if (send.delivered_at) {\n    const deliveredMs = new Date(send.delivered_at).getTime();\n    const openMs = new Date(evt.occurred_at).getTime();\n    if (openMs - deliveredMs < 60 * 1000) {\n      is_bot = true;\n    }\n  }\n}\n\nif (evt.event === 'clicked' && send.delivered_at) {\n  const deliveredMs = new Date(send.delivered_at).getTime();\n  const clickMs = new Date(evt.occurred_at).getTime();\n  if (clickMs - deliveredMs < 30 * 1000) {\n    // scanner clicking all links at once shortly after delivery\n    is_bot = true;\n  }\n}\n\nreturn [{\n  json: {\n    ...evt,\n    send_id: send.send_id || null,\n    campaign: evt.campaign || send.campaign || null,\n    lead_id: send.lead_id || evt.lead_id_hint || null,\n    state_id: send.state_id || evt.state_id_hint || null,\n    is_bot,\n  }\n}];"
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904008",
+      "name": "Insert Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1560, -80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO outreach_events (send_id, campaign, event, recipient, url, client_name, device_type, is_bot, occurred_at, raw)\nVALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::timestamptz, $10::jsonb)\nON CONFLICT (send_id, event, recipient, occurred_at) DO NOTHING\nRETURNING id;",
+        "options": {
+          "queryReplacement": "={{ $json.send_id }},={{ $json.campaign }},={{ $json.event }},={{ $json.recipient }},={{ $json.url }},={{ $json.client_name }},={{ $json.device_type }},={{ $json.is_bot }},={{ $json.occurred_at }},={{ JSON.stringify($json.raw) }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904009",
+      "name": "Terminal Event",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1820, -80],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-bounced",
+              "leftValue": "={{ $('Bot Flag Heuristics').item.json.event }}",
+              "rightValue": "bounced",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "is-complained",
+              "leftValue": "={{ $('Bot Flag Heuristics').item.json.event }}",
+              "rightValue": "complained",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "is-unsubscribed",
+              "leftValue": "={{ $('Bot Flag Heuristics').item.json.event }}",
+              "rightValue": "unsubscribed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904010",
+      "name": "Update State Terminal",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2080, -160],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nUPDATE outreach_state\nSET status = CASE\n      WHEN $3 = 'bounced' THEN 'bounced'\n      WHEN $3 = 'complained' THEN 'suppressed'\n      WHEN $3 = 'unsubscribed' THEN 'unsubscribed'\n      ELSE status\n    END,\n    next_send_at = NULL,\n    updated_at = now()\nWHERE id = $1 OR lead_id = $2;",
+        "options": {
+          "queryReplacement": "={{ $('Bot Flag Heuristics').item.json.state_id }},={{ $('Bot Flag Heuristics').item.json.lead_id }},={{ $('Bot Flag Heuristics').item.json.event }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904011",
+      "name": "Add Suppression",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2340, -160],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO suppression (email, reason, campaign)\nVALUES ($1, $2, $3)\nON CONFLICT (lower(email)) DO NOTHING;",
+        "options": {
+          "queryReplacement": "={{ $('Bot Flag Heuristics').item.json.recipient }},={{ $('Bot Flag Heuristics').item.json.event === 'bounced' ? 'bounced' : ($('Bot Flag Heuristics').item.json.event === 'complained' ? 'complaint' : 'unsubscribed') }},={{ $('Bot Flag Heuristics').item.json.campaign }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904012",
+      "name": "Respond 200 OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2600, -80],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"ok\" }",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904013",
+      "name": "IMAP Reply Trigger",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [0, 400],
+      "parameters": {
+        "mailbox": "INBOX",
+        "postProcessAction": "nothing",
+        "options": {}
+      },
+      "credentials": {
+        "imap": {
+          "id": "hermes-imap-cred",
+          "name": "Hermes IMAP"
+        }
+      },
+      "notesInFlow": true,
+      "notes": "Configure IMAP credential with host/port/user/password from $env (IMAP_HOST, IMAP_PORT, IMAP_USER, IMAP_PASSWORD)."
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904014",
+      "name": "Match Reply to Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 400],
+      "parameters": {
+        "jsCode": "const msg = $input.first().json;\nconst from = (msg.from?.value?.[0]?.address || msg.from || '').toString().toLowerCase();\nconst inReplyTo = (msg.inReplyTo || msg.headers?.['in-reply-to'] || '').toString();\nconst references = (msg.references || msg.headers?.references || '').toString();\nconst subject = (msg.subject || '').toString();\nreturn [{\n  json: {\n    sender_email: from,\n    in_reply_to: inReplyTo,\n    references,\n    subject,\n    message_id: msg.messageId || msg.headers?.['message-id'] || null,\n  }\n}];"
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904015",
+      "name": "Find Lead by Reply",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [520, 400],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT os.id AS state_id, os.lead_id, l.email, l.campaign\nFROM outreach_state os\nJOIN leads l ON l.id = os.lead_id\nWHERE lower(l.email) = $1\n   OR os.id IN (\n     SELECT s.state_id FROM outreach_sends s\n     WHERE s.provider_message_id = $2\n        OR s.provider_message_id = $3\n   )\nORDER BY os.updated_at DESC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.sender_email }},={{ $json.in_reply_to }},={{ $json.message_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904016",
+      "name": "Reply Matched",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [780, 400],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-state",
+              "leftValue": "={{ $json.state_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904017",
+      "name": "Stop Sequence on Reply",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1040, 320],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nUPDATE outreach_state\nSET status = 'replied', next_send_at = NULL, updated_at = now()\nWHERE id = $1\nRETURNING id, lead_id, campaign;",
+        "options": {
+          "queryReplacement": "={{ $json.state_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904018",
+      "name": "Suppress Replied",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1300, 320],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO suppression (email, reason, campaign)\nSELECT lower(l.email), 'replied', l.campaign\nFROM leads l\nWHERE l.id = $1\nON CONFLICT (lower(email)) DO NOTHING;",
+        "options": {
+          "queryReplacement": "={{ $json.lead_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "d1b2c3d4-e5f6-4789-a012-345678904019",
+      "name": "No Reply Match",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1040, 480],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Mailgun Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Mailgun Signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Mailgun Signature": {
+      "main": [
+        [
+          {
+            "node": "Signature Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signature Valid": {
+      "main": [
+        [
+          {
+            "node": "Normalize Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 406 Invalid Signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Event": {
+      "main": [
+        [
+          {
+            "node": "Lookup Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Send": {
+      "main": [
+        [
+          {
+            "node": "Bot Flag Heuristics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bot Flag Heuristics": {
+      "main": [
+        [
+          {
+            "node": "Insert Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Event": {
+      "main": [
+        [
+          {
+            "node": "Terminal Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Terminal Event": {
+      "main": [
+        [
+          {
+            "node": "Update State Terminal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 200 OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update State Terminal": {
+      "main": [
+        [
+          {
+            "node": "Add Suppression",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Suppression": {
+      "main": [
+        [
+          {
+            "node": "Respond 200 OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMAP Reply Trigger": {
+      "main": [
+        [
+          {
+            "node": "Match Reply to Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Reply to Lead": {
+      "main": [
+        [
+          {
+            "node": "Find Lead by Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Lead by Reply": {
+      "main": [
+        [
+          {
+            "node": "Reply Matched",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply Matched": {
+      "main": [
+        [
+          {
+            "node": "Stop Sequence on Reply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Reply Match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop Sequence on Reply": {
+      "main": [
+        [
+          {
+            "node": "Suppress Replied",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

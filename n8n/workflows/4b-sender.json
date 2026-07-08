@@ -1,0 +1,428 @@
+{
+  "name": "4b — Sender",
+  "nodes": [
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903001",
+      "name": "Schedule Every 15 Min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903002",
+      "name": "Outreach Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [260, 0],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"offer\": \"PASTE from 04-outreach-plan.md — one-line offer\",\n  \"cta\": \"PASTE CTA from 04-outreach-plan.md\",\n  \"voice\": \"PASTE voice/tone from 04-outreach-plan.md\",\n  \"constraints\": \"No invented facts. ≤120 words. One CTA. 1:1 tone.\",\n  \"sender_name\": \"Julian Berlow\",\n  \"sender_signature\": \"Julian Berlow — berlow.de\",\n  \"impressum_line\": \"Impressum: https://berlow.de/impressum | Datenschutz: https://berlow.de/datenschutz\",\n  \"angles\": {\n    \"0\": \"PASTE Day 0 drip angle from 04-outreach-plan.md\",\n    \"1\": \"PASTE Day 3 drip angle from 04-outreach-plan.md\",\n    \"2\": \"PASTE Day 5 drip angle from 04-outreach-plan.md\"\n  }\n}",
+        "options": {}
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903003",
+      "name": "Get Campaign Configs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [520, 0],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT campaign, daily_send_cap, max_new_per_day, send_window_start, send_window_end, min_gap_seconds, timezone\nFROM outreach_config;"
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903004",
+      "name": "Send Window Guard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 0],
+      "parameters": {
+        "jsCode": "const config = $('Outreach Config').first().json;\nconst inWindow = [];\nfor (const item of $input.all()) {\n  const row = item.json;\n  const tz = row.timezone || 'Europe/Berlin';\n  const now = new Date();\n  const parts = new Intl.DateTimeFormat('en-GB', {\n    timeZone: tz,\n    hour: '2-digit',\n    minute: '2-digit',\n    hour12: false,\n  }).formatToParts(now);\n  const hour = parts.find(p => p.type === 'hour')?.value || '00';\n  const minute = parts.find(p => p.type === 'minute')?.value || '00';\n  const nowTime = `${hour}:${minute}:00`;\n  const start = (row.send_window_start || '09:00:00').toString().slice(0, 8);\n  const end = (row.send_window_end || '17:00:00').toString().slice(0, 8);\n  if (nowTime >= start && nowTime <= end) {\n    inWindow.push({ json: { ...row, outreach_config: config } });\n  }\n}\nreturn inWindow;"
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903005",
+      "name": "Fetch Due Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1040, 0],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nSELECT s.id AS state_id, s.lead_id, s.sequence_step, s.campaign,\n       l.email, l.first_name, l.company, l.title, l.domain\nFROM outreach_state s\nJOIN leads l ON l.id = s.lead_id\nWHERE s.status = 'in_sequence' AND s.next_send_at <= now()\n  AND s.campaign = $1\n  AND (SELECT count(*) FROM outreach_sends\n       WHERE campaign = $1 AND sent_at::date = now()::date) < $2\nORDER BY s.next_send_at ASC\nLIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.campaign }},={{ $json.daily_send_cap }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903006",
+      "name": "Has Due Lead",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1300, 0],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-state-id",
+              "leftValue": "={{ $json.state_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903007",
+      "name": "Attach Outreach Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, -80],
+      "parameters": {
+        "jsCode": "const lead = $input.first().json;\nconst cfg = $('Outreach Config').first().json;\nconst step = String(lead.sequence_step ?? 0);\nconst angle = (cfg.angles && cfg.angles[step]) ? cfg.angles[step] : `Follow-up step ${step}`;\nreturn [{ json: { ...lead, outreach: cfg, angle } }];"
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903008",
+      "name": "LLM Write Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1820, -80],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $env.OUTREACH_LLM_MODEL }}\",\n  \"max_tokens\": 512,\n  \"system\": \"Write a short 1:1 cold email. Return STRICT JSON only: {\\\"subject\\\":\\\"...\\\",\\\"body\\\":\\\"...\\\"}. No markdown. ≤120 words. One CTA. Never invent facts not in the lead facts. If unsure, omit.\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Lead: {{ $json.first_name }} at {{ $json.company }} ({{ $json.title }}, {{ $json.domain }}). Step angle: {{ $json.angle }}. Offer: {{ $json.outreach.offer }}. CTA: {{ $json.outreach.cta }}. Voice: {{ $json.outreach.voice }}. Constraints: {{ $json.outreach.constraints }}.\"\n    }\n  ]\n}",
+        "options": {}
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903009",
+      "name": "Parse LLM or Fallback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2080, -80],
+      "parameters": {
+        "jsCode": "const lead = $('Attach Outreach Config').first().json;\nconst cfg = lead.outreach;\nlet subject = null;\nlet body = null;\ntry {\n  const resp = $input.first().json;\n  const text = (resp.content || []).map(c => c.text || '').join('');\n  const match = text.match(/\\{[\\s\\S]*\\}/);\n  if (match) {\n    const parsed = JSON.parse(match[0]);\n    subject = (parsed.subject || '').trim();\n    body = (parsed.body || '').trim();\n  }\n} catch (e) {\n  // fall through to template\n}\nif (!subject || !body) {\n  const name = lead.first_name || 'there';\n  const company = lead.company || 'your team';\n  subject = `${cfg.offer} — quick note for ${company}`;\n  body = `Hi ${name},\\n\\n${lead.angle}\\n\\n${cfg.offer}\\n\\n${cfg.cta}\\n\\nBest,\\n${cfg.sender_name}`;\n}\nconst footer = `\\n\\n---\\n%unsubscribe_url%\\n${cfg.impressum_line}`;\nreturn [{ json: { ...lead, subject, body, html_body: body + footer } }];"
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903010",
+      "name": "Send via Mailgun",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2340, -80],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.MAILGUN_BASE_URL }}/{{ $env.MAILGUN_DOMAIN }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Basic ' + Buffer.from('api:' + $env.MAILGUN_API_KEY).toString('base64') }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $json.outreach.sender_name }} <hello@{{ $env.MAILGUN_DOMAIN }}>"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $json.subject }}"
+            },
+            {
+              "name": "html",
+              "value": "={{ $json.html_body }}"
+            },
+            {
+              "name": "o:tracking",
+              "value": "yes"
+            },
+            {
+              "name": "o:tag",
+              "value": "={{ $json.campaign }}"
+            },
+            {
+              "name": "v:lead_id",
+              "value": "={{ $json.lead_id }}"
+            },
+            {
+              "name": "v:state_id",
+              "value": "={{ $json.state_id }}"
+            },
+            {
+              "name": "v:step",
+              "value": "={{ $json.sequence_step }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903011",
+      "name": "Prepare Send Record",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2600, -80],
+      "parameters": {
+        "jsCode": "const lead = $('Parse LLM or Fallback').first().json;\nconst mg = $input.first().json;\nconst providerMessageId = mg.id || mg['Message-Id'] || null;\nreturn [{\n  json: {\n    state_id: lead.state_id,\n    lead_id: lead.lead_id,\n    campaign: lead.campaign,\n    sequence_step: lead.sequence_step,\n    provider_message_id: providerMessageId,\n    recipient: lead.email,\n    subject: lead.subject,\n    body: lead.body,\n  }\n}];"
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903012",
+      "name": "Log Send",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2860, -80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nINSERT INTO outreach_sends (state_id, lead_id, campaign, sequence_step, provider_message_id, recipient, subject, body)\nVALUES ($1, $2, $3, $4, $5, $6, $7, $8)\nRETURNING id AS send_id;",
+        "options": {
+          "queryReplacement": "={{ $json.state_id }},={{ $json.lead_id }},={{ $json.campaign }},={{ $json.sequence_step }},={{ $json.provider_message_id }},={{ $json.recipient }},={{ $json.subject }},={{ $json.body }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903013",
+      "name": "Advance State",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [3120, -80],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SET search_path TO hermes_outreach;\nUPDATE outreach_state\nSET sequence_step = CASE WHEN sequence_step < 2 THEN sequence_step + 1 ELSE sequence_step END,\n    next_send_at = CASE\n      WHEN sequence_step = 0 THEN now() + interval '3 days'\n      WHEN sequence_step = 1 THEN now() + interval '2 days'\n      ELSE NULL\n    END,\n    status = CASE WHEN sequence_step >= 2 THEN 'completed' ELSE 'in_sequence' END,\n    updated_at = now()\nWHERE id = $1\nRETURNING id, sequence_step, status, next_send_at;",
+        "options": {
+          "queryReplacement": "={{ $('Prepare Send Record').item.json.state_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "hermes-postgres-cred",
+          "name": "Hermes Postgres"
+        }
+      }
+    },
+    {
+      "id": "c1b2c3d4-e5f6-4789-a012-345678903014",
+      "name": "No Due Lead",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1560, 120],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Schedule Every 15 Min": {
+      "main": [
+        [
+          {
+            "node": "Outreach Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outreach Config": {
+      "main": [
+        [
+          {
+            "node": "Get Campaign Configs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Campaign Configs": {
+      "main": [
+        [
+          {
+            "node": "Send Window Guard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Window Guard": {
+      "main": [
+        [
+          {
+            "node": "Fetch Due Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Due Lead": {
+      "main": [
+        [
+          {
+            "node": "Has Due Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Due Lead": {
+      "main": [
+        [
+          {
+            "node": "Attach Outreach Config",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Due Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Outreach Config": {
+      "main": [
+        [
+          {
+            "node": "LLM Write Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Write Email": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM or Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM or Fallback": {
+      "main": [
+        [
+          {
+            "node": "Send via Mailgun",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send via Mailgun": {
+      "main": [
+        [
+          {
+            "node": "Prepare Send Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Send Record": {
+      "main": [
+        [
+          {
+            "node": "Log Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Send": {
+      "main": [
+        [
+          {
+            "node": "Advance State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false
+}

@@ -1,0 +1,2 @@
+campaign,email,first_name,company,title,domain,source,icp_score,notes
+example-campaign,jane@example.com,Jane,Example GmbH,Founder,example.com,csv,7,"Met on IndieHackers; replied to my Show HN"
