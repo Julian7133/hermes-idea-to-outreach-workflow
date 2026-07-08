@@ -1,0 +1,10 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "scores": { "survival": 3, "status": 1, "belonging": 2, "control": 4, "curiosity": 1 },
+  "primary_driver": "control",
+  "secondary_driver": "survival",
+  "desire_strength": 3,
+  "desire_strength_label": "moderate",
+  "pain_intensity": "nagging",
+  "notes": "Buyer desire is operational control (reduce stock/livestock chaos) plus business-survival cost-avoidance (mortality and mis-order losses). Not a status/curiosity purchase. Pain is real but nagging rather than acute — spreadsheets are 'good enough' until a costly loss. ASSUMPTION."
+}

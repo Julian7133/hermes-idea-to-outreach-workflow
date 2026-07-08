@@ -1,0 +1,62 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — computed from dimension JSONs to exercise idea-scoring + downstream steps. Not a substitute for live research.",
+  "dimension_scores": {
+    "demand": 52,
+    "monetization": 70,
+    "distribution": 82,
+    "retention": 85,
+    "competition": 78,
+    "founder_market_fit": 62,
+    "boring_trends": 88
+  },
+  "weights_applied": {
+    "demand": 0.20,
+    "monetization": 0.20,
+    "distribution": 0.20,
+    "retention": 0.15,
+    "competition": 0.10,
+    "founder_market_fit": 0.10,
+    "boring_trends": 0.05
+  },
+  "present_dimensions": 7,
+  "floor_penalty": 1.0,
+  "base_score": 71.95,
+  "missing_discount": 1.0,
+  "final_score": 72,
+  "verdict": "test",
+  "score_confidence": "high",
+  "missing_inputs": [],
+  "top_strengths": [
+    { "dimension": "retention", "score": 85, "reason": "retention_verdict sticky; estimated_monthly_logo_churn_pct 3%; daily core-workflow usage" },
+    { "dimension": "distribution", "score": 82, "reason": "distribution_verdict strong; cold_outbound_viability viable; icp_reachability high" },
+    { "dimension": "boring_trends", "score": 88, "reason": "boring_trends_verdict defensible; unsexy niche with 2 supporting macro trends" }
+  ],
+  "top_weaknesses": [
+    { "dimension": "demand", "score": 52, "reason": "desire_strength_label moderate; pain_intensity nagging — spreadsheets remain good enough until a costly loss" },
+    { "dimension": "founder_market_fit", "score": 62, "reason": "no documented reptile-retail domain edge in user_profile.md; founder_edge_type none in distribution.json" },
+    { "dimension": "monetization", "score": 70, "reason": "monetization_validated false; healthy LTV:CAC on paper but WTP unproven (pricing.json)" }
+  ],
+  "killer_dimensions": [],
+  "riskiest_assumption_test": {
+    "assumption": "Independent reptile-shop owners will pay ~$69/mo for livestock-native inventory software instead of free spreadsheets.",
+    "category": "monetization",
+    "criticality": 5,
+    "uncertainty": 5,
+    "rat_score": 25,
+    "experiment": {
+      "type": "landing-page-smoke-test",
+      "description": "Stage 2 landing page (Carrd) showing the $69/mo price and value prop; drive traffic with ~$50 Google Ads; capture emails as the behavioral signal.",
+      "duration": "2 weeks",
+      "estimated_cost": "$50 ad spend + Carrd",
+      "pass_threshold": "cost per collected email < $8",
+      "references_stage2": true,
+      "fail_action": "pivot — narrow ICP (e.g. multi-location only) or drop if no signal at 2× spend"
+    },
+    "all_assumptions_ranked": [
+      { "assumption": "Owners will pay ~$69/mo instead of spreadsheets", "criticality": 5, "uncertainty": 5, "rat_score": 25 },
+      { "assumption": "Total addressable shop count supports a solo-viable business (SOM)", "criticality": 4, "uncertainty": 4, "rat_score": 16 },
+      { "assumption": "Livestock-native wedge beats generic POS for this buyer", "criticality": 4, "uncertainty": 3, "rat_score": 12 },
+      { "assumption": "Cold outbound can reach 20–200 named shops at acceptable CAC", "criticality": 3, "uncertainty": 2, "rat_score": 6 }
+    ]
+  }
+}

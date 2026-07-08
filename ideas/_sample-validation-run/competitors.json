@@ -1,0 +1,50 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — all values ASSUMPTION-level, not researched. Produced to exercise the Stage 1 chain.",
+  "direct_competitors": [
+    {
+      "name": "ASSUMPTION: generic vertical inventory tool (no dedicated reptile SaaS found)",
+      "pricing": "$40-$120/mo",
+      "pricing_model": "per-account",
+      "estimated_customers": "unknown",
+      "g2_capterra_rating": 0,
+      "review_count": 0,
+      "last_updated": "n/a",
+      "top_features": ["stock counts", "supplier orders"],
+      "top_complaints": ["no live-animal / morph modelling", "not built for the vertical"],
+      "complaint_themes": ["vertical mismatch"],
+      "channels_observed": ["seo-content", "paid-search"]
+    }
+  ],
+  "indirect_competitors": [
+    { "name": "Square / Lightspeed retail POS", "approach": "general retail POS + inventory", "why_buyers_choose_it": "already used at the register; one system for checkout" },
+    { "name": "MorphMarket + breeder tooling", "approach": "livestock listing/marketplace with light record-keeping", "why_buyers_choose_it": "already where morphs are bought/sold" }
+  ],
+  "substitutes": [
+    { "description": "Google Sheets / Excel livestock + stock logs", "cost": "$0", "friction_level": "low", "switching_cost_to_product": "must migrate historical rows + retrain staff" },
+    { "description": "Paper feeding/mortality logs", "cost": "$0", "friction_level": "low", "switching_cost_to_product": "low data to migrate but strong habit" },
+    { "description": "Doing nothing / owner memory", "cost": "$0", "friction_level": "low", "switching_cost_to_product": "must prove the tool prevents real losses" }
+  ],
+  "emerging_threats": [
+    { "name": "ASSUMPTION: a POS adding a livestock module", "stage": "announced", "funded": true, "threat_level": "medium", "notes": "if Lightspeed/Square shipped morph+mortality fields, the wedge shrinks" }
+  ],
+  "review_mining_summary": {
+    "most_common_complaint_across_competitors": "generic tools do not model live animals (morph genetics, feeding, mortality)",
+    "strongest_gap_signal": "livestock-native records + mortality/mis-order reporting",
+    "competitors_mined": 0
+  },
+  "positioning_gaps": [
+    { "gap_type": "philosophy", "description": "livestock-first inventory (animals are stock, not SKUs)", "defensibility": "high", "evidence": "no incumbent models morph/feeding/mortality — ASSUMPTION" },
+    { "gap_type": "audience", "description": "purpose-built for 1-3 location reptile/exotic shops", "defensibility": "medium", "evidence": "generic POS ignores the segment" }
+  ],
+  "saturation_score": {
+    "direct_competitor_count": 1,
+    "incumbent_dominance": 1,
+    "funding_in_space": 1,
+    "keyword_saturation": 1,
+    "content_saturation": 1,
+    "total": 5
+  },
+  "market_saturation": "low",
+  "differentiation_opportunities": ["livestock-native data model", "mortality & mis-order cost reporting", "expo/supplier order sync"],
+  "market_insights_sources_used": ["memory/market_insights/reptile-store-inventory-2026-07.md"]
+}

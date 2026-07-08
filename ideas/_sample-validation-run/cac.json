@@ -1,0 +1,29 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "ltv": {
+    "estimated_ltv": 2300,
+    "arpu_monthly": 69,
+    "average_lifespan_months": 33,
+    "ltv_confidence": "medium",
+    "ltv_assumptions": [
+      "ARPU = flat $69/mo per account (pricing.json target)",
+      "lifespan ~= 1 / 0.03 monthly logo churn ~= 33 months (retention.json)",
+      "NRR ~102% adds slight expansion; ignored in point LTV. ASSUMPTION."
+    ]
+  },
+  "cac_by_channel": {
+    "seo_content":  { "cac": 0, "ltv_cac_ratio": 0, "classification": "n/a", "payback_months": 0 },
+    "cold_outbound":{ "cac": 90, "ltv_cac_ratio": 25.6, "classification": "excellent", "payback_months": 1.3 },
+    "communities":  { "cac": 60, "ltv_cac_ratio": 38.3, "classification": "excellent", "payback_months": 0.9 },
+    "partnerships": { "cac": 150, "ltv_cac_ratio": 15.3, "classification": "excellent", "payback_months": 2.2 },
+    "paid_search":  { "cac": 0, "ltv_cac_ratio": 0, "classification": "n/a", "payback_months": 0 }
+  },
+  "skipped_channels": ["seo_content (negligible search volume)", "paid_search (no commercial-intent volume)"],
+  "viable_channels": ["cold_outbound", "communities", "partnerships"],
+  "recommended_first_channel": "cold_outbound",
+  "recommended_first_channel_rationale": "Effective CAC is mostly founder time (ASSUMPTION: ~$90/acquired account); ratio is healthy well past 3:1 and payback is ~1 month. It also doubles as the demand/WTP test.",
+  "payback_period_months": 1.3,
+  "market_insights_adjustments": ["Rising niche; organic community CAC may improve as more shops professionalise. ASSUMPTION."],
+  "viability_verdict": "viable",
+  "viability_verdict_rationale": "Multiple channels clear 3:1 with sub-3-month payback. Unit economics per logo are fine; the binding constraint is the small number of logos available (SOM), not CAC."
+}

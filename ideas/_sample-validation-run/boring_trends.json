@@ -1,0 +1,19 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "idea_one_liner": "Livestock-native inventory SaaS for 1-3 location independent reptile/exotic-pet shops.",
+  "unsexiness": "unsexy",
+  "narrowness": "viable-niche",
+  "defensibility_rationale": "A boring, tiny vertical no VC-backed team wants to build: reptile-retail back-office. That is the moat — incumbents (Square/Lightspeed) will not add morph/feeding/mortality modelling for a few thousand shops, and the livestock-native data model is a philosophy gap that is hard to bolt on. Risk: the same smallness that repels competitors also caps SOM.",
+  "sociological_trend": {
+    "name": "Professionalisation of the post-2020 exotic-pet retail boom",
+    "why_it_lifts_this_idea": "A cohort of shops opened during the 2020-2023 reptile-keeping surge and is now formalising back-office operations, creating first-time demand for real inventory software over spreadsheets.",
+    "is_assumption": true
+  },
+  "technological_trend": {
+    "name": "Commoditised vertical-SaaS stacks (managed DB + auth + hosting)",
+    "why_it_lifts_this_idea": "A solo founder can now build and run a niche vertical tool cheaply enough that a few-thousand-shop TAM is economically viable — impossible a decade ago.",
+    "is_assumption": true
+  },
+  "supporting_trend_count": 2,
+  "boring_trends_verdict": "defensible"
+}

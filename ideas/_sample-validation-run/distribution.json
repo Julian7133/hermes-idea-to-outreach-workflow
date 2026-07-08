@@ -1,0 +1,20 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "icp_reachability": "high",
+  "reachability_rationale": "Independent reptile/exotic shops are enumerable: reptile-expo vendor rosters, breeder/retail directories, MorphMarket-ecosystem stores, and shop websites with public emails. A solo founder can hand-build 20-200 named shops in 1-2 weeks. LinkedIn is thin for this ICP, so list-building leans on directories + expo lists. ASSUMPTION.",
+  "channels_ranked": [
+    { "channel": "cold-outbound", "viability": "high", "rationale": "named shops with public emails; owner is the single decision-maker; wedge (livestock-native inventory) fits a 1:1 message", "time_to_first_10_customers": "ASSUMPTION: 6-10 weeks" },
+    { "channel": "communities", "viability": "medium", "rationale": "reptile owner FB groups + subreddits exist but are hobbyist-heavy; must participate authentically, not spam", "time_to_first_10_customers": "ASSUMPTION: 2-4 months" },
+    { "channel": "partnerships", "viability": "medium", "rationale": "expo organisers and reptile-supply wholesalers already serve the ICP; solo-reachable but slow", "time_to_first_10_customers": "ASSUMPTION: 3-6 months" },
+    { "channel": "seo-content", "viability": "low", "rationale": "tiny search volume for the vertical; content won't scale to a small buyer pool", "time_to_first_10_customers": "ASSUMPTION: 6+ months" },
+    { "channel": "paid-search", "viability": "low", "rationale": "negligible commercial-intent search volume; not worth indie budget", "time_to_first_10_customers": "not realistic solo" }
+  ],
+  "cold_outbound_viability": "viable",
+  "cold_outbound_rationale": "ICP reachability is high, the buyer is the owner (no procurement gate), and the wedge is articulable in one sentence. Compliance: US/UK 1:1 B2B email is workable; DACH/EU requires UWG/GDPR-cautious 1:1 outreach. ASSUMPTION.",
+  "recommended_first_channel": "cold-outbound",
+  "recommended_first_channel_rationale": "Highest-viability channel the founder can execute now and the motion this pipeline is built around; directly tests demand + WTP against named shops.",
+  "founder_distribution_edge": "user_profile.md absent — founder edge unknown; do not assume an audience.",
+  "founder_edge_type": "none",
+  "distribution_verdict": "strong",
+  "distribution_verdict_rationale": "ICP reachability is high and cold outbound is viable with a clear wedge; two channels (cold-outbound, communities) are viable/medium. Distribution is a strength — the constraint is market SIZE, not reachability."
+}

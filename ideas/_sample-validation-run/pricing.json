@@ -1,0 +1,20 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "wtp_range": { "low": 39, "target": 69, "aspirational": 99, "currency": "USD", "unit": "per-account", "period": "monthly" },
+  "van_westendorp": { "too_cheap": 19, "cheap_but_acceptable": 39, "getting_expensive": 79, "too_expensive": 120 },
+  "desire_premium_multiplier": 1.2,
+  "desire_premium_rationale": "Control + business-survival drivers support a modest premium; not a status purchase, so no high multiplier. ASSUMPTION.",
+  "recommended_pricing_model": "per-account",
+  "pricing_models_considered": [
+    { "model": "per-account", "fit_rationale": "one owner pays; 1-4 staff seats included; matches how a small shop buys", "risk": "caps expansion revenue per logo" },
+    { "model": "per-seat", "fit_rationale": "expansion as shops add staff", "risk": "shops have few staff — low seat counts, friction" },
+    { "model": "usage-based", "fit_rationale": "scale with animal count", "risk": "unpredictable bills deter SMB owners" }
+  ],
+  "recommended_price": { "monthly_per_seat": 0, "annual_per_seat": 0, "flat_monthly": 69, "annual_discount_pct": 20, "one_time": 0 },
+  "competitive_pricing_range": { "min": 40, "max": 120, "modal": 69 },
+  "category_benchmark_range": { "min": 40, "max": 120 },
+  "expansion_potential": { "exists": true, "rationale": "+$29/mo per extra location for 2-3 location shops; modest ASSUMPTION" },
+  "monetization_validated": false,
+  "market_insights_pricing_signals": ["No dedicated competitor pricing (whitespace); anchored to adjacent vertical SMB tools $40-$120/mo. ASSUMPTION."],
+  "pricing_rationale": "Flat per-account ~$69/mo anchored to one hour/week of owner time saved and adjacent-vertical pricing. WTP is UNVALIDATED (no direct paid competitor) — this is a key risk the RAT must test."
+}

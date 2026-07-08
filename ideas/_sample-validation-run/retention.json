@@ -1,0 +1,17 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "natural_usage_frequency": "daily",
+  "external_trigger": "feeding schedules, deliveries received, animals sold, weekly stock count",
+  "embeddedness": "core-workflow",
+  "switching_cost": "high",
+  "habit_formation_score": 4,
+  "churn_risk_factors": [
+    "shop closure / churn of the underlying small businesses (macro risk)",
+    "owner reverts to spreadsheets if onboarding friction is high",
+    "control+survival desires align with a core-workflow tool → supports retention (from desire_scores.json)"
+  ],
+  "estimated_monthly_logo_churn_pct": 3,
+  "estimated_net_revenue_retention_pct": 102,
+  "churn_risk": "low",
+  "retention_verdict": "sticky"
+}

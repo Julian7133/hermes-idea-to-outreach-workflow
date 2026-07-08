@@ -1,0 +1,19 @@
+{
+  "_note": "ILLUSTRATIVE dry-run output — ASSUMPTION-level, not researched.",
+  "chosen_motion": "founder-led-cold-outbound",
+  "is_founder_led_outbound_primary": true,
+  "why_it_fits": "distribution.json ranks cold-outbound first (viability high): ICP reachability is high, the buyer is the owner-operator (no procurement gate), and the livestock-native wedge fits a one-sentence cold message. Unit economics on cold_outbound show LTV:CAC 25.6:1 with ~1.3-month payback (cac.json). This pipeline is built around 1:1 outreach.",
+  "outbound_specific_risk": "Small, listifiable market — list exhaustion after ~200 shops; message fatigue if the wedge sounds like 'yet another inventory tool'. DACH/EU sends require UWG/GDPR-cautious 1:1 tone (user_profile.md). ASSUMPTION: 10–15% positive-reply rate is the bar for list quality.",
+  "motions_ranked": [
+    { "motion": "founder-led-cold-outbound", "fit_score": 5, "rationale": "Highest-viability channel; directly tests the RAT (WTP + demand); matches pipeline design", "resource_requirement": "ASSUMPTION: 5–8 hrs/wk for 6–10 weeks to first 10 accounts" },
+    { "motion": "community-led", "fit_score": 3, "rationale": "Reptile FB groups and subreddits exist but are hobbyist-heavy; trust-building is slow", "resource_requirement": "ASSUMPTION: 3–5 hrs/wk authentic participation for 2–4 months" },
+    { "motion": "partnerships", "fit_score": 3, "rationale": "Expo organisers and supply wholesalers reach the ICP but partnership cycles are long for a solo founder", "resource_requirement": "ASSUMPTION: 1–2 partnerships in 3–6 months" },
+    { "motion": "content-seo", "fit_score": 1, "rationale": "Negligible commercial search volume for the vertical (distribution.json)", "resource_requirement": "Low spend but poor ROI on a tiny buyer pool" },
+    { "motion": "paid-search", "fit_score": 1, "rationale": "No commercial-intent keywords; not viable solo (distribution.json)", "resource_requirement": "Would burn budget without intent" }
+  ],
+  "disqualified_motions": [
+    { "motion": "content-seo", "reason": "Tiny search volume; cannot scale to a few-thousand-shop SOM" },
+    { "motion": "paid-search", "reason": "No commercial-intent volume; CAC unprovable" }
+  ],
+  "run_context": "stage-1-preliminary"
+}
