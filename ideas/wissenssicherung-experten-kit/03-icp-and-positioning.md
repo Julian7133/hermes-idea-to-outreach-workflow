@@ -27,3 +27,8 @@
 - **Abgrenzung:** Ein Experte/ein Anlagenbereich; keine Steuerung, Sicherheitsfreigabe, ERP-Integration oder Garantie auf vollständige Wissensabdeckung. Datenhaltung nach abgestimmter Cloud-/Lokal-Prüfung.
 - **Einwände + Antworten:** „Das dokumentieren wir selbst.“ – Gut; der Pilot prüft, ob strukturierte Fälle plus Belege die Übergabe nutzbarer machen. / „Der Bot könnte falsche Antworten geben.“ – Quellen und Testfragen machen Fehler sichtbar; Freigaben bleiben beim Team. / „Wir haben kaum Zeit.“ – Umfang auf zehn priorisierte Fälle begrenzen; Expertenzeit vorab gemeinsam planen.
 - **Proof:** NBG Phase 1a über 1.600 € geliefert; Phase 1b freigegeben (Kontext, kein unabhängiger Marktnachweis). / NBG nutzt einfache Excel-Fallliste plus LangDock-RAG und Testfragen. / Julian hat einen lokalen Wissensbot mit Sprachinterviews, Prüfregeln und belegten Antworten (Kontext-Asset).
+
+## Preisentscheidung 2026-10-17 (ersetzt die Paketpreise oben)
+- Julian: ein Hauptangebot mit festem Umfang: Expertenwissen sichern 3.500 € netto. Kostenfreies Erstgespräch (30 Min.), Ausbau/Umsetzung separat kalkuliert, Begleitung nach Abnahme optional. Keine Billigstufen, keine Abo-Preiskarten.
+- Grund: vergleichbare Leistungen verkauft Julian bereits für ca. 2.500 €; niedrigere Einstiege würden das untergraben.
+- Verbindliche Quelle für Kundentexte: 10-vertrieb/angebote/produkte/wissenssicherung-experten-kit/folieninhalte.md

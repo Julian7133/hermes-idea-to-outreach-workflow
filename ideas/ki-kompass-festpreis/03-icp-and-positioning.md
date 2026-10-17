@@ -27,3 +27,8 @@
 - **Abgrenzung:** Keine vollständige Unternehmensstrategie, keine Implementierung im Assessment, höchstens drei priorisierte Use Cases; größere Interview-/Folienarbeit separat.
 - **Einwände + Antworten:** „Wir haben schon eine Use-Case-Liste.“ – Wir priorisieren konkrete Abläufe und entscheiden, was als Nächstes passiert. / „Das können wir intern.“ – Ja; der Festpreis lohnt nur, wenn eine neutrale Moderation und klare Entscheidung helfen. / „Datenschutz blockiert.“ – Datenweg und offene Fragen werden früh sichtbar; Freigabe bleibt bei Ihren Verantwortlichen.
 - **Proof:** Theo Gandenheimer nannte Bedarf und 2.500-€-Preis für Roadmap/Bestandsaufnahme; keine bestätigte Beauftragung. / Für NBG wurden 11 mögliche Leuchttürme gesammelt (internes CRM-Kontextdokument). / Julian ist Physiker und Ex-CEO/CTO; verantwortete 3,2 Mio. € VC (Messaging-Core; persönliche Vita, kein Produktresultat).
+
+## Preisentscheidung 2026-10-17 (ersetzt die Paketpreise oben)
+- Julian: ein Hauptangebot mit festem Umfang: KI-Kompass 2.500 € netto. Kostenfreies Erstgespräch (30 Min.), Ausbau/Umsetzung separat kalkuliert, Begleitung nach Abnahme optional. Keine Billigstufen, keine Abo-Preiskarten.
+- Grund: vergleichbare Leistungen verkauft Julian bereits für ca. 2.500 €; niedrigere Einstiege würden das untergraben.
+- Verbindliche Quelle für Kundentexte: 10-vertrieb/angebote/produkte/ki-kompass-festpreis/folieninhalte.md

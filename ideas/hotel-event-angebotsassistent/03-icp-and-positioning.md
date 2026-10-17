@@ -27,3 +27,8 @@
 - **Abgrenzung:** Kein automatischer Versand oder verbindliches Angebot; keine garantierte Verfügbarkeit, Preisentscheidung, Opera-/Event-CRM-Integration oder vollständige Buchungsplattform. Schnittstelle separat prüfen.
 - **Einwände + Antworten:** „Event Temple/MyHotelOps kann das.“ – Dann zuerst prüfen, ob vorhandene Lizenz und Einstellungen den Ablauf bereits lösen. / „Falscher Preis wäre teuer.“ – Preis wird nur aus freigegebenen Daten übernommen und jeder Entwurf bleibt menschlich prüfpflichtig. / „Wir migrieren gerade Opera Cloud.“ – Pilot auf anonymisierten Beispielen und ohne Schreibzugriff; Integration erst nach Klärung des Zielsystems.
 - **Proof:** Theo Gandenheimer/Hotel Maximilian's nannte Event-Angebotsentwürfe als Favorit (Kontext, keine Bestellung). / Maximilian's Kontext nennt 12 Tagungsräume und Opera-Cloud-Umstellung zum 15.01.2027. / Julian hat vorhandene Angebotsprozess- und Hotel-Deck-Build-Assets (Kontext; kein Ergebnisversprechen).
+
+## Preisentscheidung 2026-10-17 (ersetzt die Paketpreise oben)
+- Julian: ein Hauptangebot mit festem Umfang: Hotel-Pilot „Tagungsanfragen schneller beantworten“ 3.500 € netto. Kostenfreies Erstgespräch (30 Min.), Ausbau/Umsetzung separat kalkuliert, Begleitung nach Abnahme optional. Keine Billigstufen, keine Abo-Preiskarten.
+- Grund: vergleichbare Leistungen verkauft Julian bereits für ca. 2.500 €; niedrigere Einstiege würden das untergraben.
+- Verbindliche Quelle für Kundentexte: 10-vertrieb/angebote/produkte/hotel-event-angebotsassistent/folieninhalte.md
