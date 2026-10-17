@@ -3,7 +3,7 @@ slug: wissenssicherung-experten-kit
 title: Virtueller Experte für ausscheidendes Instandhaltungswissen
 status: active
 created: 2026-10-17
-stage: 0
+stage: 2
 ---
 
 # 00 — Idea Capture

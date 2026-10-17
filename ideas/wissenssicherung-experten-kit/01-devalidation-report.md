@@ -1,5 +1,7 @@
 # 01 — Devalidation Report
 
+**Gate:** PASS + GREENLIGHT NEXT STAGE (Julian, 2026-10-17); Stage 1 → Stage 2 freigegeben.
+
 ## CLEARFRAME
 - **Customer:** Produktionsmittelstand, zunächst NBG-ähnliche Betriebe mit kritischem Maschinenwissen und absehbarem Ausscheiden eines Experten.
 - **Job:** Störungswissen so aufnehmen, dass andere Mitarbeitende konkrete Fälle schneller lösen.

@@ -1,5 +1,7 @@
 # 01 — Devalidation Report
 
+**Gate:** PASS + GREENLIGHT NEXT STAGE (Julian, 2026-10-17); Stage 1 → Stage 2 freigegeben.
+
 ## CLEARFRAME
 - **Customer:** Privat geführte Tagungs- und Eventhotels mit wiederkehrenden Gruppen-/Veranstaltungsanfragen und manuell erstellten Angeboten.
 - **Job:** Aus unvollständigen Anfragen schnell einen belastbaren, bearbeitbaren Angebotsentwurf erstellen.
