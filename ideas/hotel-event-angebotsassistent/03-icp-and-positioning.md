@@ -31,4 +31,4 @@
 ## Preisentscheidung 2026-10-17 (ersetzt die Paketpreise oben)
 - Julian: ein Hauptangebot mit festem Umfang: Hotel-Pilot „Tagungsanfragen schneller beantworten“ 3.500 € netto. Kostenfreies Erstgespräch (30 Min.), Ausbau/Umsetzung separat kalkuliert, Begleitung nach Abnahme optional. Keine Billigstufen, keine Abo-Preiskarten.
 - Grund: vergleichbare Leistungen verkauft Julian bereits für ca. 2.500 €; niedrigere Einstiege würden das untergraben.
-- Verbindliche Quelle für Kundentexte: 10-vertrieb/angebote/produkte/hotel-event-angebotsassistent/folieninhalte.md
+- Verbindliche Quelle für Kundentexte (seit 2026-10-20): Landingpage 20-marketing/website/src/pages/HotelPilot.tsx · live: https://berlow.de/angebote/hotel-pilot-tagungsanfragen (alte Produktfolien archiviert im Angebote-Repo, Branch archiv/produktdecks)
