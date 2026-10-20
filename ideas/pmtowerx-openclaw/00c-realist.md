@@ -1,0 +1,26 @@
+# 00c — Realist
+
+## Gewählte Ausprägung
+**A — Werkzeug** — Solo am schnellsten zum zahlenden Kunden, weil kein Hosting- und kein Ops-Versprechen im ersten Euro steckt: ein kuratierter Workspace als Skill-Tower, verteilt über ClawHub + Direktverkauf (Polar/Gumroad), zahlt sofort und skaliert ohne Server. Die Dienstleistung (B) und die regulierte Nische (C) bleiben als Upsell/Testballon für Monat 2 — erst beweisen, dass der Tower als Werkzeug gekauft wird, dann Managed-Run als „ich betreibe es dir" nachschieben.
+Verworfen, aber aufgehoben: **B — Dienstleistung** bleibt als €49–€190/Monat-Retainer für Non-Technical-PMs, die nach Kauf „kannst du es mir auch hosten?" fragen; **C — DACH-Regulated** bleibt als €290-Setup-Spezialisierung, wenn beim Outreach Datenschutz als Einwand dominiert.
+
+## Der erste zahlende Kunde
+**Mira, Solo-PM / Head of Product, 12–25 MA B2B-SaaS, DACH (Berlin/München/Remote), 30–42 Jahre**, hat Productboard oder Notion+Sheets im Einsatz, zahlt ungern $118–$295/Monat für 2–5 Maker, und jongliert Discovery + Delivery gleichzeitig. **Auslöser:** Sie hat letzte Woche 6 Stunden an einem PRD + Roadmap-Update gehangen, der Founder fragte „woher weißt du, dass das das richtige Feature ist?", und sie hatte keine zitierbare VoC- oder Competitor-Evidenz parat. **Moment:** Montagmorgen vor dem Sprint-Planning, als sie merkt, dass sie wieder ohne verlässlichen Wochen-Report in die Priorisierung geht.
+**Erreichbar über:** ClawHub-Suche („product manager", „pm", „roadmap"), openclaw-Discord/Community, PM-Communities (Product Collective Slack, Mind the Product DACH, LinkedIn PM-Posts), Content-Gap-SEO („openclaw pm setup" noch kaum bedient) — **nicht** primär Cold Email an anonyme SaaS-Listen, sondern Pull + Community + ClawHub-Empfehlung.
+
+## Der kleinste Beweis
+**Eingabe:** 5 Context-Files (company, product, customers, constraints, goals) + Liste von 8–12 Quellen (3 Competitor-Sites, 2 G2/Capterra-Kategorien, 1 Product Hunt Topic, 2 eigene Quellen wie Support-Board/Intercom-Export, Slack-#feedback) + 1 Feature-Idee in einem Satz. **Verarbeitung:** openclaw-Agent läuft wöchentlichen Cron (oder manuell `/pmtowerx weekly`): scrapt die 8–12 Quellen via Firecrawl/Puppeteer-Skill (fallback: manuell kuratierte Links, wenn Scraping blockt), wendet die 5 Context-Files + RICE/MoSCoW + Now/Next/Later-Template an, schreibt einen **Tower-Report** (Lage → Priorisierungsvorschlag → 1 PRD-Draft mit Akzeptanzkriterien + offene Fragen). **Ausgabe:** 1 Markdown-Report (versendbar per Email/Slack) + 1 PRD-Markdown + 1 Roadmap-Diff (3-Horizonte-Board als Tabelle). **Bewusst nicht drin:** Kein eigenes Hosting, kein Scraping-Scale über 12 Quellen, kein Jira-Auto-Write im MVP (nur Copy-Paste-fertiger Draft), kein Multi-User-Permissioning.
+
+## Weg zum ersten Euro
+**Preis:** €149 einmalig (Workspace + Skill-Tower + Wizard + 3 Monate Updates) — Begründung aus Nutzen: ersetzt 4–6 h/Woche Synthese + erspart Productboard $228–$708/Jahr für 1–2 Maker; Amortisation im ersten Monat, danach Flat-Fee-Besitz. Managed-Add-on €49/Monat nur als Zweitangebot nach Kauf.
+1. Kuriere den Tower aus bestehenden OSS-Bausteinen (afrexai-product-manager, product-manager, pm-agent + eigene `00-context`-Files) zu einem kohärenten `pmtowerx/`-Repo mit `/start`-Wizard und 3 Demo-Reports.
+2. Publiziere auf ClawHub (`pmtowerx`) + Polar/Gumroad-Landing mit 3-min Loom ("Montag 7 Uhr: so sieht der Tower aus"), verlinkt aus 2 tiefen Content-Posts („Warum dein PM-Stack kein Gedächtnis hat").
+3. Seede in 2 Communities (openclaw Discord #showcase + Product Collective) mit kostenloser Lite-Version (5 statt 12 Quellen, 1 PRD-Template) — CTA „volle 12 Quellen + alle 11 Workflows = €149".
+4. Sammle die ersten 5 Käufer per manueller DM/Intro (kein Cold Blast), bitte um je 1 Zitat + 1 echten Wochen-Report als Case, nutze die Cases für den Product Hunt / ClawHub-Trending-Push.
+5. Biete Käufern nach 14 Tagen den Managed-Run (€49/Monat, Fly.io-Deploy in 60 Sek) als „du hast den Tower, willst du dass er von selbst läuft?"-Upsell.
+
+## Aufwand und Abhängigkeiten
+**Aufwand kleinster Beweis: 8–12 Tage solo** (3 Tage Kuratieren + Wizard, 2 Tage Cron/Scraping-Fallback, 2 Tage Templates/PRD-Qualitätsrubric, 2 Tage ClawHub-Publish + Loom + Landing). **Fehlende Zugänge:** Keine — alles OSS/Markdown, Firecrawl-Key nur für Scraping-Variante (fallback ohne Key möglich). **Drittabhängigkeiten:** openclaw-Gateway (Node 22/24/26) + ClawHub-Registry (MIT-0 Lizenz, 20 % Fee bei Paid-Skills), Fly.io für Managed-Add-on, G2/Capterra/Competitor-Sites (Scraping-TOS/Rate-Limits — deshalb Fallback auf manuell kuratierte Links). Kein Rechtsrisiko (keine Rechtsberatung, nur PM-Methodik).
+
+## Riskanteste Annahme
+**Annahme:** Solo-PMs zahlen für einen kuratierten Tower (Kohärenz + Gedächtnis), obwohl alle Einzeltteile gratis als Mixtape herumliegen (5.700 Skills, 3 große PM-Skills je kostenlos). **Billiger Test:** Biete die Lite-Version (5 Quellen + 1 PRD) gratis in openclaw Discord + Product Collective an, messe in 10 Tagen: Wie viele installieren, wie viele fragen nach „mehr Quellen / alle Workflows"? Bei ≥3 „wo kaufe ich den vollen Tower?"-DMs ist die Annahme gestützt; bei 0 trotz 40+ Installs ist der Tower kein Produkt, sondern ein Blogpost.
