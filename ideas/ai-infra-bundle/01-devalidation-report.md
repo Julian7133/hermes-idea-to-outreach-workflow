@@ -70,4 +70,3 @@
 ## K6-Einordnung
 
 - Julians Vorteile (bb/openclaw Agent-Orchestrierung, ~20 Projekte, DACH-Marke berlow.de/pragmatic-ai-systems, Physik/Engineering) sind real, aber für dieses Infra-Bundle kein unfairer Vorteil gegenüber Platform-Teams und OSS-Maintainern — in `A`-Linse korrekt als "keiner" bewertet.
-

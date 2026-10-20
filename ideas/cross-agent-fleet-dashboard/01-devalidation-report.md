@@ -58,4 +58,3 @@
 - Verified: `oguzhnatly/fleet` und `bjornjee/agent-dashboard` decken die behauptete Lücke als Gratis-MIT bereits ab; native Dashboards je Tool seit Mai/August 2026 verifiziert.
 - Kein Founder-Unfair-Advantage in Cursor/Codex-Interna; bb-Vorteil real, aber nicht hinreichend für Cross-Tool-Wedge.
 - Retention-/CAC-Zahlen bleiben ASSUMPTION.
-
